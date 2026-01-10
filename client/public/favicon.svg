@@ -1,0 +1,26 @@
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="luxGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E6B8A2"/>
+      <stop offset="100%" stop-color="#D4A5A5"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="#121212"/>
+
+  <!-- Lettermark -->
+  <path
+    d="M10 8.5 V24 H22 V21.5 H13.5 V8.5 Z"
+    fill="url(#luxGradient)"
+  />
+
+  <!-- Luxury sparkle -->
+  <circle cx="20" cy="11" r="0.9" fill="#f0e6d2"/>
+  <path
+    d="M20 9.8 V12.2 M18.8 11 H21.2"
+    stroke="#f0e6d2"
+    stroke-width="0.4"
+    opacity="0.8"
+  />
+</svg>
