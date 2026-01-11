@@ -1,4 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "wouter";
+import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/layout/Layout";
 import { formatCurrency } from "@/lib/utils";
 import { Loader2, Package } from "lucide-react";
@@ -68,10 +70,15 @@ export default function Orders() {
                                             <p className="font-medium">{order.id}</p>
                                         </div>
                                     </div>
-                                    <div>
+                                    <div className="flex items-center gap-4">
                                         <Badge variant={order.status === "pending" ? "default" : "secondary"} className="uppercase">
                                             {order.status}
                                         </Badge>
+                                        <Link href={`/request-return/${order.id}`}>
+                                            <Button variant="outline" size="sm" className="rounded-xl font-bold uppercase text-[10px] tracking-widest h-8 px-4">
+                                                Request Return
+                                            </Button>
+                                        </Link>
                                     </div>
                                 </div>
                                 <div className="p-4">

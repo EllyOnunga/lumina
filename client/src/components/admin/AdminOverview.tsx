@@ -89,13 +89,13 @@ export function AdminOverview({ products, orders, users }: AdminOverviewProps) {
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                 {stats.map((stat, i) => (
-                    <Card key={i} className="border-none shadow-xl bg-background rounded-[2rem] overflow-hidden group hover:scale-[1.02] transition-transform duration-300">
+                    <Card key={i} className="border border-secondary/10 shadow-xl bg-white rounded-[2rem] overflow-hidden group hover:scale-[1.02] hover:-translate-y-1 hover:shadow-accent/5 transition-all duration-500">
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                             <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
                                 {stat.title}
                             </CardTitle>
-                            <div className="p-2 bg-secondary/10 rounded-xl group-hover:bg-primary/20 transition-colors">
-                                <stat.icon className="w-4 h-4 text-primary" />
+                            <div className="p-3 bg-secondary/5 rounded-xl group-hover:bg-accent/10 transition-colors">
+                                <stat.icon className="w-5 h-5 text-accent" />
                             </div>
                         </CardHeader>
                         <CardContent>

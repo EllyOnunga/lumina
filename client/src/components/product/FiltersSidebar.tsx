@@ -5,6 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export interface Facets {
     categories: { id: number; name: string; count: number }[];
@@ -93,33 +99,39 @@ export function FiltersSidebar({ onFilterChange, activeFilters }: FiltersSidebar
             <Separator className="bg-muted" />
 
             {/* Categories */}
-            <div className="space-y-4">
-                <p className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Classifications</p>
-                <div className="space-y-3">
-                    {facets.categories.map((cat) => (
-                        <button
-                            key={cat.id}
-                            className="flex items-center justify-between group cursor-pointer w-full text-left"
-                            onClick={() => updateFilter('category', cat.id, !activeFilters.category?.includes(cat.id))}
-                            aria-label={`Filter by ${cat.name}`}
-                        >
-                            <div className="flex items-center gap-3">
-                                <div className={cn(
-                                    "w-4 h-4 rounded-sm border-2 flex items-center justify-center transition-all",
-                                    activeFilters.category?.includes(cat.id) ? "bg-accent border-accent" : "border-input group-hover:border-accent"
-                                )}>
-                                    {activeFilters.category?.includes(cat.id) && <Check className="w-3 h-3 text-white stroke-[4px]" />}
-                                </div>
-                                <span className={cn(
-                                    "text-sm font-bold tracking-tight transition-colors",
-                                    activeFilters.category?.includes(cat.id) ? "text-accent" : "text-foreground/70 group-hover:text-foreground"
-                                )}>{cat.name}</span>
-                            </div>
-                            <Badge variant="outline" className="rounded-full h-5 px-2 border-muted text-[10px] font-black italic">{cat.count}</Badge>
-                        </button>
-                    ))}
-                </div>
-            </div>
+            <Accordion type="single" collapsible defaultValue="categories" className="w-full">
+                <AccordionItem value="categories" className="border-none">
+                    <AccordionTrigger className="hover:no-underline py-0">
+                        <p className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Classifications</p>
+                    </AccordionTrigger>
+                    <AccordionContent className="pt-6">
+                        <div className="space-y-3">
+                            {facets.categories.map((cat) => (
+                                <button
+                                    key={cat.id}
+                                    className="flex items-center justify-between group cursor-pointer w-full text-left"
+                                    onClick={() => updateFilter('category', cat.id, !activeFilters.category?.includes(cat.id))}
+                                    aria-label={`Filter by ${cat.name}`}
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className={cn(
+                                            "w-4 h-4 rounded-sm border-2 flex items-center justify-center transition-all",
+                                            activeFilters.category?.includes(cat.id) ? "bg-accent border-accent" : "border-input group-hover:border-accent"
+                                        )}>
+                                            {activeFilters.category?.includes(cat.id) && <Check className="w-3 h-3 text-white stroke-[4px]" />}
+                                        </div>
+                                        <span className={cn(
+                                            "text-sm font-bold tracking-tight transition-colors",
+                                            activeFilters.category?.includes(cat.id) ? "text-accent" : "text-foreground/70 group-hover:text-foreground"
+                                        )}>{cat.name}</span>
+                                    </div>
+                                    <Badge variant="outline" className="rounded-full h-5 px-2 border-muted text-[10px] font-black italic">{cat.count}</Badge>
+                                </button>
+                            ))}
+                        </div>
+                    </AccordionContent>
+                </AccordionItem>
+            </Accordion>
 
             <Separator className="bg-muted" />
 

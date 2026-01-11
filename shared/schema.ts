@@ -14,6 +14,7 @@ export const users = pgTable("users", {
   isAdmin: boolean("is_admin").default(false).notNull(),
   role: text("role").default("user").notNull(), // 'user', 'admin', 'manager', 'editor'
   preferences: text("preferences").array(), // Preferred categories e.g. ["Men", "Accessories"]
+  loyaltyPoints: integer("loyalty_points").default(0).notNull(),
 });
 
 export const categories = pgTable("categories", {
@@ -114,6 +115,9 @@ export const orders = pgTable("orders", {
   taxAmount: integer("tax_amount").notNull().default(0),
   shippingCost: integer("shipping_cost").notNull().default(0),
   shippingMethod: text("shipping_method").notNull().default("standard"), // standard, express, pickup, free
+  pointsEarned: integer("points_earned").default(0).notNull(),
+  pointsRedeemed: integer("points_redeemed").default(0).notNull(),
+  giftCardAmount: integer("gift_card_amount").default(0).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -281,6 +285,54 @@ export const passwordResetTokens = pgTable("password_reset_tokens", {
   token: text("token").notNull().unique(),
   expiresAt: timestamp("expires_at").notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const flashSales = pgTable("flash_sales", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description"),
+  startTime: timestamp("start_time").notNull(),
+  endTime: timestamp("end_time").notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const flashSaleProducts = pgTable("flash_sale_products", {
+  id: serial("id").primaryKey(),
+  flashSaleId: integer("flash_sale_id").notNull().references(() => flashSales.id),
+  productId: integer("product_id").notNull().references(() => products.id),
+  salePrice: integer("sale_price").notNull(),
+  stockLimit: integer("stock_limit").notNull(),
+  soldCount: integer("sold_count").default(0).notNull(),
+});
+
+export const currencies = pgTable("currencies", {
+  id: serial("id").primaryKey(),
+  code: text("code").notNull().unique(), // e.g., 'USD', 'EUR', 'KES'
+  symbol: text("symbol").notNull(), // e.g., '$', '€', 'KSH'
+  exchangeRate: numeric("exchange_rate").notNull(), // Relative to KES (base)
+  isBase: boolean("is_base").default(false).notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+});
+
+export const giftCards = pgTable("gift_cards", {
+  id: serial("id").primaryKey(),
+  code: text("code").notNull().unique(),
+  initialValue: integer("initial_value").notNull(),
+  remainingValue: integer("remaining_value").notNull(),
+  senderId: integer("sender_id").references(() => users.id),
+  recipientEmail: text("recipient_email").notNull(),
+  message: text("message"),
+  expiresAt: timestamp("expires_at"),
+  isActive: boolean("is_active").default(true).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const settings = pgTable("settings", {
+  id: serial("id").primaryKey(),
+  key: text("key").notNull().unique(),
+  value: jsonb("value").notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 // Relations
@@ -502,6 +554,7 @@ export const insertOrderSchema = createInsertSchema(orders).extend({
   shippingCost: true,
   paymentStatus: true,
   externalTransactionId: true,
+  pointsEarned: true,
 });
 
 export const insertAddressSchema = createInsertSchema(addresses).omit({
@@ -522,6 +575,9 @@ export const createOrderSchema = insertOrderSchema.extend({
   taxAmount: z.number(),
   shippingCost: z.number(),
   total: z.number(),
+  pointsRedeemed: z.number().optional(),
+  giftCardAmount: z.number().optional(),
+  giftCardCode: z.string().optional(),
   items: z.array(z.object({
     productId: z.number(),
     quantity: z.number(),
@@ -584,3 +640,29 @@ export const insertPluginSchema = createInsertSchema(plugins).omit({
   updatedAt: true,
 });
 export type InsertPlugin = z.infer<typeof insertPluginSchema>;
+
+export const insertFlashSaleSchema = createInsertSchema(flashSales).omit({
+  id: true,
+  createdAt: true,
+});
+export type FlashSale = typeof flashSales.$inferSelect;
+export type InsertFlashSale = z.infer<typeof insertFlashSaleSchema>;
+
+export const insertFlashSaleProductSchema = createInsertSchema(flashSaleProducts).omit({
+  id: true,
+});
+export type FlashSaleProduct = typeof flashSaleProducts.$inferSelect;
+export type InsertFlashSaleProduct = z.infer<typeof insertFlashSaleProductSchema>;
+
+export const insertCurrencySchema = createInsertSchema(currencies).omit({
+  id: true,
+});
+export type Currency = typeof currencies.$inferSelect;
+export type InsertCurrency = z.infer<typeof insertCurrencySchema>;
+
+export const insertGiftCardSchema = createInsertSchema(giftCards).omit({
+  id: true,
+  createdAt: true,
+});
+export type GiftCard = typeof giftCards.$inferSelect;
+export type InsertGiftCard = z.infer<typeof insertGiftCardSchema>;

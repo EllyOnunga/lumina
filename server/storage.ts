@@ -7,7 +7,10 @@ import {
   addresses, orderTracking, returns, type Address, type InsertAddress, type Return, type InsertReturn, type OrderTracking,
   type BlogPost, type InsertBlogPost, type InsertBlogPostInternal, type Page, type Coupon, type InsertCoupon, type AnalyticsEvent, type NewsletterSubscriber,
   blogPosts, pages, coupons, analyticsEvents, newsletterSubscribers, plugins, type Plugin, type InsertPlugin,
-  emailVerificationTokens, passwordResetTokens
+  emailVerificationTokens, passwordResetTokens,
+  flashSales, flashSaleProducts, currencies, giftCards,
+  type FlashSale, type InsertFlashSale, type FlashSaleProduct, type InsertFlashSaleProduct,
+  type Currency, type GiftCard, type InsertGiftCard
 } from "@shared/schema";
 import { db, pool } from "./db";
 import { eq, and, ilike, gte, lte, asc, desc, SQL, inArray, sql } from "drizzle-orm";
@@ -60,7 +63,7 @@ export interface IStorage {
   clearCart(userId: number): Promise<void>;
   mergeCart(userId: number, items: { productId: number; quantity: number }[]): Promise<void>;
 
-  createOrder(userId: number | null, subtotal: number, taxAmount: number, shippingCost: number, total: number, items: { productId: number; quantity: number; price: number }[], details: { customerFullName: string; customerEmail: string; shippingAddress: string; shippingCity: string; shippingZipCode: string; phoneNumber: string; orderNotes?: string | null; shippingMethod: string }): Promise<Order>;
+  createOrder(userId: number | null, subtotal: number, taxAmount: number, shippingCost: number, total: number, items: { productId: number; quantity: number; price: number }[], details: { customerFullName: string; customerEmail: string; shippingAddress: string; shippingCity: string; shippingZipCode: string; phoneNumber: string; orderNotes?: string | null; shippingMethod: string; pointsRedeemed?: number; giftCardAmount?: number; giftCardCode?: string }): Promise<Order>;
   getUserOrders(userId: number): Promise<(Order & { items: (typeof orderItems.$inferSelect & { product: Product })[] })[]>;
   getAllOrders(): Promise<(Order & { items: (typeof orderItems.$inferSelect & { product: Product })[], user: User | null })[]>;
   getOrder(id: number): Promise<(Order & { items: (typeof orderItems.$inferSelect & { product: Product })[], user: User | null, tracking: OrderTracking[], returns: Return[] }) | undefined>;
@@ -103,6 +106,7 @@ export interface IStorage {
   getLowStockAlerts(): Promise<(Product & { totalStock: number })[]>;
 
   getCategories(): Promise<Category[]>;
+  getCategory(id: number): Promise<Category | undefined>;
   createCategory(category: { name: string; slug: string; parentId?: number | null; description?: string }): Promise<Category>;
   getTags(): Promise<Tag[]>;
   createTag(tag: { name: string; slug: string }): Promise<Tag>;
@@ -143,6 +147,27 @@ export interface IStorage {
   getEmailVerificationToken(token: string): Promise<{ userId: number; expiresAt: Date } | undefined>;
   deleteEmailVerificationToken(token: string): Promise<void>;
 
+  // Loyalty Program
+  getUserLoyaltyPoints(userId: number): Promise<number>;
+  updateUserLoyaltyPoints(userId: number, points: number): Promise<void>;
+
+  // Flash Sales
+  getFlashSales(activeOnly?: boolean): Promise<FlashSale[]>;
+  getFlashSale(id: number): Promise<(FlashSale & { products: (FlashSaleProduct & { product: Product })[] }) | undefined>;
+  createFlashSale(sale: InsertFlashSale, products: InsertFlashSaleProduct[]): Promise<FlashSale>;
+
+  // Multi-Currency
+  getCurrencies(): Promise<Currency[]>;
+  getCurrencyByCode(code: string): Promise<Currency | undefined>;
+
+  // Gift Cards
+  getGiftCardByCode(code: string): Promise<GiftCard | undefined>;
+  createGiftCard(card: InsertGiftCard): Promise<GiftCard>;
+  updateGiftCardBalance(id: number, amount: number): Promise<void>;
+
+  // Smart Recommendations
+  getFrequentlyBoughtTogether(productId: number): Promise<Product[]>;
+  getRecommendedProducts(userId: number | null): Promise<Product[]>;
   sessionStore: session.Store;
 }
 
@@ -613,9 +638,17 @@ export class DatabaseStorage implements IStorage {
       phoneNumber: string;
       orderNotes?: string | null;
       shippingMethod: string;
+      pointsRedeemed?: number;
+      giftCardAmount?: number;
+      giftCardCode?: string;
     }
   ): Promise<Order> {
     return await db.transaction(async (tx) => {
+      const { pointsRedeemed = 0, giftCardAmount = 0, giftCardCode, ...orderData } = details;
+
+      // Calculate points earned (1 point per 100 base units of currency, e.g., 1 KSH per 100 KSH)
+      const pointsEarned = Math.floor(subtotal / 10000); // Assuming subtotal is in cents, 10000 cents = 100 KES
+
       // 1. Create Order
       const [order] = await tx.insert(orders).values({
         userId,
@@ -624,7 +657,10 @@ export class DatabaseStorage implements IStorage {
         shippingCost,
         total,
         status: "pending",
-        ...details
+        pointsEarned,
+        pointsRedeemed,
+        giftCardAmount,
+        ...orderData
       }).returning();
 
       // 2. Process items
@@ -689,9 +725,27 @@ export class DatabaseStorage implements IStorage {
       if (userId) {
         await tx.update(carts).set({ isOpen: false }).where(and(eq(carts.userId, userId), eq(carts.isOpen, true)));
         await tx.insert(carts).values({ userId, isOpen: true });
+
+        // Update user loyalty points
+        const [user] = await tx.select().from(users).where(eq(users.id, userId));
+        if (user) {
+          await tx.update(users)
+            .set({ loyaltyPoints: user.loyaltyPoints + pointsEarned - pointsRedeemed })
+            .where(eq(users.id, userId));
+        }
       }
 
-      // 4. Record initial tracking
+      // 4. Update Gift Card balance if used
+      if (giftCardCode && giftCardAmount > 0) {
+        const [card] = await tx.select().from(giftCards).where(eq(giftCards.code, giftCardCode));
+        if (card) {
+          await tx.update(giftCards)
+            .set({ remainingValue: Math.max(0, card.remainingValue - giftCardAmount) })
+            .where(eq(giftCards.id, card.id));
+        }
+      }
+
+      // 5. Record initial tracking
       await tx.insert(orderTracking).values({
         orderId: order.id,
         status: "pending",
@@ -904,6 +958,11 @@ export class DatabaseStorage implements IStorage {
 
   async getCategories(): Promise<Category[]> {
     return await db.select().from(categories);
+  }
+
+  async getCategory(id: number): Promise<Category | undefined> {
+    const [category] = await db.select().from(categories).where(eq(categories.id, id));
+    return category;
   }
 
   async createCategory(insertCategory: { name: string; slug: string; parentId?: number | null; description?: string }): Promise<Category> {
@@ -1167,6 +1226,130 @@ export class DatabaseStorage implements IStorage {
   async deleteEmailVerificationToken(token: string): Promise<void> {
     await db.delete(emailVerificationTokens).where(eq(emailVerificationTokens.token, token));
   }
+
+  // Loyalty Program Implementation
+  async getUserLoyaltyPoints(userId: number): Promise<number> {
+    const [user] = await db.select({ points: users.loyaltyPoints }).from(users).where(eq(users.id, userId));
+    return user?.points || 0;
+  }
+
+  async updateUserLoyaltyPoints(userId: number, points: number): Promise<void> {
+    await db.update(users).set({ loyaltyPoints: points }).where(eq(users.id, userId));
+  }
+
+  // Flash Sales Implementation
+  async getFlashSales(activeOnly = false): Promise<FlashSale[]> {
+    const now = new Date();
+    if (activeOnly) {
+      return await db.select().from(flashSales).where(
+        and(
+          eq(flashSales.isActive, true),
+          lte(flashSales.startTime, now),
+          gte(flashSales.endTime, now)
+        )
+      );
+    }
+    return await db.select().from(flashSales);
+  }
+
+  async getFlashSale(id: number): Promise<(FlashSale & { products: (FlashSaleProduct & { product: Product })[] }) | undefined> {
+    const [sale] = await db.select().from(flashSales).where(eq(flashSales.id, id));
+    if (!sale) return undefined;
+
+    const saleProducts = await db.query.flashSaleProducts.findMany({
+      where: eq(flashSaleProducts.flashSaleId, id),
+      with: { product: true }
+    });
+
+    return { ...sale, products: saleProducts };
+  }
+
+  async createFlashSale(sale: InsertFlashSale, items: InsertFlashSaleProduct[]): Promise<FlashSale> {
+    return await db.transaction(async (tx) => {
+      const [newSale] = await tx.insert(flashSales).values(sale).returning();
+      if (items.length > 0) {
+        await tx.insert(flashSaleProducts).values(
+          items.map(item => ({ ...item, flashSaleId: newSale.id }))
+        );
+      }
+      return newSale;
+    });
+  }
+
+  // Multi-Currency Implementation
+  async getCurrencies(): Promise<Currency[]> {
+    return await db.select().from(currencies).where(eq(currencies.isActive, true));
+  }
+
+  async getCurrencyByCode(code: string): Promise<Currency | undefined> {
+    const [currency] = await db.select().from(currencies).where(eq(currencies.code, code));
+    return currency;
+  }
+
+  // Gift Cards Implementation
+  async getGiftCardByCode(code: string): Promise<GiftCard | undefined> {
+    const [card] = await db.select().from(giftCards).where(
+      and(eq(giftCards.code, code), eq(giftCards.isActive, true))
+    );
+    return card;
+  }
+
+  async createGiftCard(card: InsertGiftCard): Promise<GiftCard> {
+    const [newCard] = await db.insert(giftCards).values(card).returning();
+    return newCard;
+  }
+
+  async updateGiftCardBalance(id: number, amount: number): Promise<void> {
+    await db.update(giftCards).set({ remainingValue: amount }).where(eq(giftCards.id, id));
+  }
+
+  // Smart Recommendations Implementation
+  async getFrequentlyBoughtTogether(productId: number): Promise<Product[]> {
+    const orderIdsResult = await db.select({ orderId: orderItems.orderId })
+      .from(orderItems)
+      .where(eq(orderItems.productId, productId))
+      .limit(50);
+
+    const orderIds = orderIdsResult.map(o => o.orderId);
+    if (orderIds.length === 0) return [];
+
+    const otherProductsResult = await db.select({
+      productId: orderItems.productId,
+      count: sql<number>`count(*)`
+    })
+      .from(orderItems)
+      .where(and(
+        inArray(orderItems.orderId, orderIds),
+        sql`${orderItems.productId} != ${productId}`
+      ))
+      .groupBy(orderItems.productId)
+      .orderBy(desc(sql`count(*)`))
+      .limit(4);
+
+    const otherProductIds = otherProductsResult.map(p => p.productId);
+    if (otherProductIds.length === 0) return [];
+
+    return await db.select().from(products).where(inArray(products.id, otherProductIds));
+  }
+
+  async getRecommendedProducts(userId: number | null): Promise<Product[]> {
+    if (!userId) {
+      return await db.select().from(products).where(eq(products.isFeatured, true)).limit(8);
+    }
+
+    const user = await this.getUser(userId);
+    const prefs = user?.preferences || [];
+
+    if (prefs.length > 0) {
+      return await db.select().from(products)
+        .where(inArray(products.category, prefs))
+        .limit(8);
+    }
+
+    return await db.select().from(products).where(eq(products.isFeatured, true)).limit(8);
+  }
+
+
 }
 
 export const storage = new DatabaseStorage();
