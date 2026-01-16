@@ -192,7 +192,7 @@ export default function ProductDetail() {
         <div className="grid lg:grid-cols-12 gap-12 items-start h-full">
           {/* Image Gallery with Card Style */}
           <div className="lg:col-span-7 space-y-8 h-full">
-            <div className="bg-white/50 backdrop-blur-md border border-white rounded-3xl p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-700 h-full">
+            <div className="bg-card/50 dark:bg-card/20 backdrop-blur-md border border-border dark:border-white/5 rounded-3xl p-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-700 h-full">
               <div className="relative group overflow-hidden rounded-2xl bg-secondary/5 h-[800px]">
                 <ProductImageZoom
                   src={allImages[activeImage]}
@@ -232,7 +232,7 @@ export default function ProductDetail() {
 
           {/* Product Details with Card Style */}
           <div className="lg:col-span-5 sticky top-32">
-            <div className="bg-white/50 backdrop-blur-md border border-white rounded-3xl p-10 lg:p-14 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-700 space-y-12">
+            <div className="bg-card/50 dark:bg-card/20 backdrop-blur-md border border-border dark:border-white/5 rounded-3xl p-10 lg:p-14 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-700 space-y-12">
               <div className="space-y-6">
                 <div className="flex items-center gap-3">
                   <span className="text-[11px] font-black text-accent uppercase tracking-[0.25em] px-4 py-2 bg-accent/5 rounded-full border border-accent/20">
@@ -314,8 +314,8 @@ export default function ProductDetail() {
                   </TabsContent>
 
                   <TabsContent value="reviews" className="mt-0 outline-none space-y-10">
-                    <div className="bg-white/50 backdrop-blur-sm p-8 rounded-3xl border border-secondary/10 shadow-sm mb-10">
-                      <h3 className="text-xs font-black uppercase tracking-widest mb-6 italic">File a Field Report</h3>
+                    <div className="bg-card/50 dark:bg-card/20 backdrop-blur-sm p-8 rounded-3xl border border-secondary/10 shadow-sm mb-10">
+                      <h3 className="text-xs font-black uppercase tracking-widest mb-6 italic text-foreground">File a Field Report</h3>
                       <form onSubmit={reviewForm.handleSubmit((data) => createReviewMutation.mutate(data))} className="space-y-6">
                         <div className="flex gap-2">
                           {[1, 2, 3, 4, 5].map((star) => (
@@ -333,7 +333,7 @@ export default function ProductDetail() {
                         <Textarea
                           {...reviewForm.register("comment")}
                           placeholder="Document your experience with this asset..."
-                          className="rounded-2xl border-secondary/20 focus:border-accent min-h-[100px] bg-white italic"
+                          className="rounded-2xl border-secondary/20 focus:border-accent min-h-[100px] bg-background dark:bg-card italic text-foreground"
                         />
                         <Button
                           type="submit"
@@ -363,13 +363,13 @@ export default function ProductDetail() {
                   </TabsContent>
 
                   <TabsContent value="questions" className="mt-0 outline-none space-y-10">
-                    <div className="bg-white/50 backdrop-blur-sm p-8 rounded-3xl border border-secondary/10 shadow-sm mb-10">
-                      <h3 className="text-xs font-black uppercase tracking-widest mb-6 italic">Initiate Query</h3>
+                    <div className="bg-card/50 dark:bg-card/20 backdrop-blur-sm p-8 rounded-3xl border border-secondary/10 shadow-sm mb-10">
+                      <h3 className="text-xs font-black uppercase tracking-widest mb-6 italic text-foreground">Initiate Query</h3>
                       <form onSubmit={questionForm.handleSubmit((data) => createQuestionMutation.mutate(data))} className="space-y-4">
                         <Textarea
                           {...questionForm.register("question")}
                           placeholder="What information do you require regarding this unit?"
-                          className="rounded-2xl border-secondary/20 focus:border-accent min-h-[100px] bg-white italic"
+                          className="rounded-2xl border-secondary/20 focus:border-accent min-h-[100px] bg-background dark:bg-card italic text-foreground"
                         />
                         <Button
                           type="submit"

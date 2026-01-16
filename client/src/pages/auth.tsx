@@ -159,7 +159,7 @@ export default function AuthPage() {
                 <Separator />
               </div>
               <div className="relative flex justify-center text-[10px] uppercase font-black tracking-[0.2em]">
-                <span className="bg-[#1a1a1a] px-3 text-muted-foreground">Digital Identity Socials</span>
+                <span className="bg-background dark:bg-[#1a1a1a] px-3 text-muted-foreground">Digital Identity Socials</span>
               </div>
             </div>
 

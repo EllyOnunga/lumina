@@ -128,36 +128,36 @@ export function FloatingSearch({ onSearch }: FloatingSearchProps) {
         <>
             <button
                 onClick={openSearch}
-                className="w-full flex items-center gap-3 px-4 h-11 bg-secondary/10 border border-secondary/20 hover:bg-secondary/20 rounded-xl transition-all group group-hover:border-accent/30"
+                className="w-full flex items-center gap-3 px-4 h-11 bg-secondary/20 dark:bg-card border border-border/50 dark:border-white/10 hover:bg-secondary/30 dark:hover:bg-accent/10 rounded-xl transition-all group group-hover:border-accent/30"
             >
                 <Search className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
                 <span className="text-sm font-medium text-muted-foreground/60 transition-colors group-hover:text-muted-foreground">Search assets, categories...</span>
             </button>
 
             {isOpen && (
-                <div className="fixed inset-0 z-[100] bg-background/80 backdrop-blur-md animate-in fade-in duration-300">
+                <div className="fixed inset-0 z-[100] bg-background/80 dark:bg-black/90 backdrop-blur-md animate-in fade-in duration-300">
                     <div className="container mx-auto max-w-5xl mt-8 px-4 h-[90vh]">
-                        <div className="relative bg-background border border-secondary/20 shadow-2xl rounded-[2.5rem] overflow-hidden flex flex-col h-full">
-                            <form onSubmit={handleSearch} className="flex items-center px-8 h-20 border-b border-secondary/10 shrink-0">
-                                <Search className="w-6 h-6 text-primary mr-4" />
+                        <div className="relative bg-background dark:bg-card border border-border dark:border-white/10 shadow-2xl rounded-[2.5rem] overflow-hidden flex flex-col h-full">
+                            <form onSubmit={handleSearch} className="flex items-center px-8 h-20 border-b border-border dark:border-white/5 shrink-0">
+                                <Search className="w-6 h-6 text-primary dark:text-foreground mr-4" />
                                 <Input
                                     ref={inputRef}
                                     value={filters.search}
                                     onChange={(e) => setQuery(e.target.value)}
                                     placeholder="Type to find products, categories, or styles..."
-                                    className="flex-1 bg-transparent border-none focus-visible:ring-0 text-xl font-bold p-0"
+                                    className="flex-1 bg-transparent border-none focus-visible:ring-0 text-xl font-bold p-0 text-foreground"
                                 />
                                 {isLoading ? (
                                     <Loader2 className="w-5 h-5 animate-spin text-muted-foreground mr-4" />
                                 ) : null}
-                                <button type="button" onClick={() => setIsOpen(false)} aria-label="Close search" title="Close search">
+                                <button type="button" onClick={() => setIsOpen(false)} aria-label="Close search" title="Close search" className="p-2">
                                     <X className="w-6 h-6 text-muted-foreground hover:text-foreground transition-colors" />
                                 </button>
                             </form>
 
                             <div className="flex flex-1 overflow-hidden">
                                 {/* Left: Filters (Desktop) */}
-                                <div className="hidden md:block w-1/3 border-r border-secondary/10 overflow-y-auto p-6 bg-secondary/5">
+                                <div className="hidden md:block w-1/3 border-r border-border dark:border-white/5 overflow-y-auto p-6 bg-secondary/5 dark:bg-background/40">
                                     <FiltersSidebar
                                         activeFilters={filters}
                                         onFilterChange={setFilters}
@@ -165,9 +165,9 @@ export function FloatingSearch({ onSearch }: FloatingSearchProps) {
                                 </div>
 
                                 {/* Right: Suggestions/Results (Desktop & Mobile) */}
-                                <div className={`flex-1 overflow-y-auto p-6 ${showMobileFilters ? "hidden md:block" : ""}`}>
+                                <div className={`flex-1 overflow-y-auto p-6 bg-background dark:bg-card/20 ${showMobileFilters ? "hidden md:block" : ""}`}>
                                     {query.length > 1 && suggestions?.length === 0 && (
-                                        <div className="p-8 text-center">
+                                        <div className="p-8 text-center text-foreground">
                                             <p className="font-bold text-muted-foreground">No matches found for &quot;{query}&quot;</p>
                                         </div>
                                     )}
@@ -180,16 +180,16 @@ export function FloatingSearch({ onSearch }: FloatingSearchProps) {
                                                     key={product.id}
                                                     href={`/product/${product.id}`}
                                                     onClick={() => setIsOpen(false)}
-                                                    className="flex items-center justify-between p-4 hover:bg-secondary/10 rounded-2xl transition-all group cursor-pointer"
+                                                    className="flex items-center justify-between p-4 hover:bg-secondary/10 dark:hover:bg-white/5 rounded-2xl transition-all group cursor-pointer"
                                                 >
                                                     <div className="flex items-center gap-4">
-                                                        <img src={product.image} className="w-12 h-12 rounded-xl object-cover" alt={product.name} />
+                                                        <img src={product.image} className="w-12 h-12 rounded-xl object-cover border border-border/10" alt={product.name} />
                                                         <div>
-                                                            <p className="font-bold tracking-tight group-hover:text-primary">{product.name}</p>
+                                                            <p className="font-bold tracking-tight group-hover:text-primary dark:group-hover:text-accent text-foreground transition-colors">{product.name}</p>
                                                             <p className="text-xs text-muted-foreground">{product.category}</p>
                                                         </div>
                                                     </div>
-                                                    <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transform -translate-x-2 group-hover:translate-x-0 transition-all text-primary" />
+                                                    <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transform -translate-x-2 group-hover:translate-x-0 transition-all text-primary dark:text-accent" />
                                                 </Link>
                                             ))}
                                         </div>
@@ -202,7 +202,7 @@ export function FloatingSearch({ onSearch }: FloatingSearchProps) {
                                                 <Button
                                                     variant="outline"
                                                     onClick={() => setShowMobileFilters(true)}
-                                                    className="w-full mb-4"
+                                                    className="w-full mb-4 border-border"
                                                 >
                                                     <SlidersHorizontal className="mr-2 h-4 w-4" /> Filter Options
                                                 </Button>
@@ -217,7 +217,7 @@ export function FloatingSearch({ onSearch }: FloatingSearchProps) {
                                                             setQuery(tag);
                                                             inputRef.current?.focus();
                                                         }}
-                                                        className="p-4 bg-secondary/10 hover:bg-primary hover:text-primary-foreground rounded-2xl font-black text-xs uppercase tracking-widest transition-all"
+                                                        className="p-4 bg-secondary/10 dark:bg-white/5 hover:bg-primary dark:hover:bg-accent hover:text-primary-foreground dark:hover:text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all text-foreground"
                                                     >
                                                         {tag}
                                                     </button>
@@ -229,9 +229,9 @@ export function FloatingSearch({ onSearch }: FloatingSearchProps) {
 
                                 {/* Mobile Filters View */}
                                 {showMobileFilters && (
-                                    <div className="md:hidden flex-1 overflow-y-auto p-6 bg-background absolute inset-0 z-10 top-20 flex flex-col">
+                                    <div className="md:hidden flex-1 overflow-y-auto p-6 bg-background dark:bg-card absolute inset-0 z-10 top-20 flex flex-col">
                                         <div className="flex items-center justify-between mb-4">
-                                            <h3 className="font-bold text-lg">Filter Options</h3>
+                                            <h3 className="font-bold text-lg text-foreground">Filter Options</h3>
                                             <Button variant="ghost" size="sm" onClick={() => setShowMobileFilters(false)}>Close</Button>
                                         </div>
                                         <FiltersSidebar
@@ -246,7 +246,7 @@ export function FloatingSearch({ onSearch }: FloatingSearchProps) {
                             </div>
 
                             {/* Footer Actions */}
-                            <div className="p-4 border-t border-secondary/10 bg-background flex justify-end gap-3">
+                            <div className="p-4 border-t border-border dark:border-white/5 bg-background dark:bg-card/40 flex justify-end gap-3 shrink-0">
                                 <Button variant="ghost" onClick={() => setIsOpen(false)}>Cancel</Button>
                                 <Button onClick={() => { applyFilters(); setIsOpen(false); onSearch?.(); }}>
                                     View Results

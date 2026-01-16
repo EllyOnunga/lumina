@@ -70,11 +70,11 @@ export default function Home() {
 
           {/* Product Listing Card Container */}
           <div className="flex-1">
-            <div className="bg-white/50 backdrop-blur-md border border-white rounded-3xl p-8 md:p-12 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-700 min-h-[60vh]">
+            <div className="bg-card/50 dark:bg-card/20 backdrop-blur-md border border-border/50 dark:border-white/5 rounded-3xl p-8 md:p-12 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-none hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-700 min-h-[60vh]">
               <div className="space-y-12">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-10 bg-secondary/5 p-8 rounded-3xl border border-secondary/20">
                   <div>
-                    <h2 className="text-4xl font-black tracking-tighter mb-2 italic">
+                    <h2 className="text-4xl font-black tracking-tighter mb-2 italic text-foreground">
                       {activeFilters.search ? `FOUND: "${activeFilters.search}"` : "THE MANIFEST"}
                     </h2>
                     <div className="flex items-center gap-4">
@@ -82,13 +82,13 @@ export default function Home() {
                         {products?.length || 0} Registered Assets
                       </p>
                       {user?.preferences && user.preferences.length > 0 && (
-                        <div className="flex items-center space-x-2 bg-white px-3 py-1.5 rounded-full border border-secondary/50 shadow-sm">
+                        <div className="flex items-center space-x-2 bg-background dark:bg-card px-3 py-1.5 rounded-full border border-border shadow-sm">
                           <Switch
                             id="for-you"
                             checked={showPreferences}
                             onCheckedChange={setShowPreferences}
                           />
-                          <Label htmlFor="for-you" className="text-[10px] font-black uppercase tracking-widest cursor-pointer flex items-center gap-1.5 opacity-70">
+                          <Label htmlFor="for-you" className="text-[10px] font-black uppercase tracking-widest cursor-pointer flex items-center gap-1.5 opacity-70 text-foreground">
                             <Sparkles className="w-3 h-3 text-accent" />
                             Tailored
                           </Label>
@@ -100,7 +100,7 @@ export default function Home() {
                   <div className="flex items-center gap-3 w-full md:w-auto">
 
 
-                    <div className="flex items-center bg-white rounded-2xl p-1 border border-secondary shadow-sm shrink-0">
+                    <div className="flex items-center bg-background dark:bg-card rounded-2xl p-1 border border-border shadow-sm shrink-0">
                       <Button
                         variant={view === 'grid' ? 'secondary' : 'ghost'}
                         size="icon"
@@ -120,14 +120,14 @@ export default function Home() {
                     </div>
 
                     <Select value={sort} onValueChange={setSort}>
-                      <SelectTrigger className="h-12 flex-1 sm:w-52 border-secondary bg-white rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg">
+                      <SelectTrigger className="h-12 flex-1 sm:w-52 border-border bg-background dark:bg-card rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-lg text-foreground">
                         <SelectValue placeholder="Sort Discipline" />
                       </SelectTrigger>
-                      <SelectContent className="rounded-2xl border-none shadow-2xl p-2">
-                        <SelectItem value="newest" className="font-bold rounded-xl py-3">Arrival Order</SelectItem>
-                        <SelectItem value="price_asc" className="font-bold rounded-xl py-3">Ascending Value</SelectItem>
-                        <SelectItem value="price_desc" className="font-bold rounded-xl py-3">Descending Value</SelectItem>
-                        <SelectItem value="rating_desc" className="font-bold rounded-xl py-3">Elite Tier First</SelectItem>
+                      <SelectContent className="rounded-2xl border-border bg-card shadow-2xl p-2">
+                        <SelectItem value="newest" className="font-bold rounded-xl py-3 text-foreground">Arrival Order</SelectItem>
+                        <SelectItem value="price_asc" className="font-bold rounded-xl py-3 text-foreground">Ascending Value</SelectItem>
+                        <SelectItem value="price_desc" className="font-bold rounded-xl py-3 text-foreground">Descending Value</SelectItem>
+                        <SelectItem value="rating_desc" className="font-bold rounded-xl py-3 text-foreground">Elite Tier First</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

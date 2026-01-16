@@ -256,14 +256,14 @@ export function Navbar() {
                                     onClick={() => setIsCategoriesExpanded(false)}
                                     className="group flex flex-col gap-3"
                                 >
-                                    <div className="aspect-square bg-white rounded-2xl border border-muted flex items-center justify-center p-4 transition-all group-hover:border-accent group-hover:shadow-xl group-hover:shadow-accent/5">
+                                    <div className="aspect-square bg-card dark:bg-background rounded-2xl border border-border flex items-center justify-center p-4 transition-all group-hover:border-accent group-hover:shadow-xl group-hover:shadow-accent/5">
                                         <div className="w-full h-full bg-secondary/10 rounded-xl flex items-center justify-center">
                                             <span className="text-2xl font-black text-accent opacity-20 group-hover:opacity-100 transition-opacity">
                                                 {category.name.charAt(0)}
                                             </span>
                                         </div>
                                     </div>
-                                    <p className="font-black text-[10px] uppercase tracking-[0.2em] text-center group-hover:text-accent transition-colors">
+                                    <p className="font-black text-[10px] uppercase tracking-[0.2em] text-center group-hover:text-accent transition-colors text-foreground">
                                         {category.name}
                                     </p>
                                 </Link>

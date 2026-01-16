@@ -80,7 +80,7 @@ export function Hero() {
                                 <div className="hero-actions">
                                     <Button
                                         size="lg"
-                                        className="group rounded-xl px-12 h-16 text-xs uppercase font-black tracking-[0.2em] bg-white text-black hover:bg-accent hover:text-white border-0 w-full sm:w-auto transition-all duration-500 shadow-2xl"
+                                        className="group rounded-xl px-12 h-16 text-xs uppercase font-black tracking-[0.2em] bg-white text-black dark:bg-primary dark:text-primary-foreground hover:bg-accent hover:text-white dark:hover:bg-accent border-0 w-full sm:w-auto transition-all duration-500 shadow-2xl"
                                         onClick={() => setLocation(`/product/${product.id}`)}
                                     >
                                         <span className="relative z-10 flex items-center gap-3">
@@ -91,7 +91,7 @@ export function Hero() {
                                     <Button
                                         size="lg"
                                         variant="outline"
-                                        className="rounded-xl px-12 h-16 text-xs uppercase font-black tracking-[0.2em] bg-transparent text-white border-2 border-white/50 hover:bg-white hover:text-black w-full sm:w-auto transition-all duration-500 backdrop-blur-sm"
+                                        className="rounded-xl px-12 h-16 text-xs uppercase font-black tracking-[0.2em] bg-transparent text-white border-2 border-white/50 hover:bg-white hover:text-black dark:hover:bg-primary dark:hover:text-primary-foreground w-full sm:w-auto transition-all duration-500 backdrop-blur-sm"
                                         onClick={() => handleQuickAdd(product.id)}
                                         disabled={isAddingToCart}
                                     >
