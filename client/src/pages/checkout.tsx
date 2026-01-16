@@ -30,18 +30,11 @@ import { Elements } from "@stripe/react-stripe-js";
 import { StripeCheckout } from "@/components/payment/StripeCheckout";
 import { MpesaCheckout } from "@/components/payment/MpesaCheckout";
 import { PayPalCheckout } from "@/components/payment/PayPalCheckout";
+import { useSettings } from "@/hooks/use-settings";
 
 // Initialize Stripe (use env var in production)
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "pk_test_mock");
 
-const VAT_RATE = 0.16; // KRA 16% VAT
-const FREE_SHIPPING_THRESHOLD = 1000000; // 10,000 KES in cents
-
-const SHIPPING_METHODS = [
-    { id: "standard", name: "Standard (G4S/Wells Fargo)", cost: 25000, description: "3-5 business days" },
-    { id: "express", name: "Express (Door-to-Door)", cost: 50000, description: "1-2 business days" },
-    { id: "pickup", name: "In-Store Pickup", cost: 0, description: "Nairobi Central / Mombasa Mall" },
-];
 
 type CheckoutFormData = z.infer<typeof insertOrderSchema>;
 
@@ -95,6 +88,33 @@ export default function Checkout() {
         clearCart();
         queryClient.invalidateQueries({ queryKey: ["/api/orders"] });
     }, [clearCart, setIsSuccess]);
+
+    const { settings } = useSettings();
+
+    // Defaults for when settings aren't loaded
+    const VAT_RATE = settings?.tax?.taxEnabled ? (settings.tax.taxRate / 100) : 0.16;
+    const FREE_SHIPPING_THRESHOLD = (settings?.shipping?.freeShippingThreshold || 10000) * 100;
+
+    const SHIPPING_METHODS = [
+        {
+            id: "standard",
+            name: "Standard (G4S/Wells Fargo)",
+            cost: (settings?.shipping?.standardShippingCost || 500) * 100,
+            description: settings?.shipping?.standardShippingDays || "3-5 business days"
+        },
+        {
+            id: "express",
+            name: "Express (Door-to-Door)",
+            cost: (settings?.shipping?.expressShippingCost || 1500) * 100,
+            description: settings?.shipping?.expressShippingDays || "1-2 business days"
+        },
+        {
+            id: "pickup",
+            name: "In-Store Pickup",
+            cost: 0,
+            description: settings?.shipping?.pickupLocations?.join(" / ") || "Store Pickup"
+        },
+    ];
 
     const orderMutation = useMutation({
         mutationFn: async (orderData: CreateOrder) => {
@@ -189,7 +209,14 @@ export default function Checkout() {
     const shippingCost = (isFreeShippingEligible && selectedShippingMethod !== "pickup") ? 0 : (shippingMethodObj?.cost || 0);
 
     const giftCardAmount = appliedGiftCard ? Math.min(appliedGiftCard.value, subtotal + taxAmount + shippingCost) : 0;
-    const pointsRedeemed = (useLoyaltyPoints && loyalty) ? Math.min(loyalty.points * 100, subtotal + taxAmount + shippingCost - giftCardAmount) : 0;
+
+    const pointsValue = settings?.loyalty?.pointsValue || 1;
+    const minRedemption = settings?.loyalty?.minimumRedemption || 100;
+    const canRedeem = useLoyaltyPoints && loyalty && loyalty.points >= minRedemption;
+
+    const pointsRedeemed = canRedeem
+        ? Math.min(loyalty.points * pointsValue * 100, subtotal + taxAmount + shippingCost - giftCardAmount)
+        : 0;
 
     const total = Math.max(0, subtotal + taxAmount + shippingCost - giftCardAmount - pointsRedeemed);
 
@@ -213,7 +240,7 @@ export default function Checkout() {
             taxAmount,
             shippingCost,
             total,
-            pointsRedeemed: pointsRedeemed / 100, // back to points
+            pointsRedeemed: pointsRedeemed / (pointsValue * 100), // convert cents value back to points
             giftCardAmount,
             giftCardCode: appliedGiftCard?.code,
             items: cart.items.map(item => ({

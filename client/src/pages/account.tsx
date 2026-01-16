@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { useQuery } from "@tanstack/react-query";
-import type { User, Order, Address, OrderTracking } from "@shared/schema";
+import type { User, Order, Address, OrderTracking, Product, OrderItem } from "@shared/schema";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { User as UserIcon, Package, Settings, LogOut, MapPin, Heart, Bell, Shield, Mail, Check, Sparkles } from "lucide-react";
@@ -22,8 +22,9 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { useTheme } from "next-themes";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Moon, Sun, Monitor, Languages } from "lucide-react";
-type OrderWithTracking = Order & {
+import { Moon, Sun, Monitor, Languages, Eye } from "lucide-react";
+type OrderWithItems = Order & {
+    items?: (OrderItem & { product: Product })[];
     tracking?: OrderTracking[];
 };
 
@@ -36,7 +37,7 @@ export default function Account() {
         queryKey: ["/api/user"],
     });
 
-    const { data: orders } = useQuery<OrderWithTracking[]>({
+    const { data: orders } = useQuery<OrderWithItems[]>({
         queryKey: ["/api/orders"],
     });
 
@@ -67,6 +68,23 @@ export default function Account() {
         }
     });
 
+    const updateProfileMutation = useMutation({
+        mutationFn: async (data: { email?: string; phoneNumber?: string }) => {
+            await apiRequest("PATCH", "/api/profile", data);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+            setIsEditingProfile(false);
+            toast({ title: "Profile updated", description: "Your personal details have been saved." });
+        }
+    });
+
+    const [isEditingProfile, setIsEditingProfile] = useState(false);
+    const [profileForm, setProfileForm] = useState({
+        email: user?.email || "",
+        phoneNumber: user?.phoneNumber || ""
+    });
+
     const handleLogout = async () => {
         await fetch("/api/logout", { method: "POST" });
         window.location.href = "/";
@@ -93,6 +111,25 @@ export default function Account() {
         }
     }
 
+    const newsletterMutation = useMutation({
+        mutationFn: async (action: 'subscribe' | 'unsubscribe') => {
+            const endpoint = action === 'subscribe' ? '/api/newsletter/subscribe' : '/api/newsletter/unsubscribe';
+            await apiRequest("POST", endpoint, { email: newsletterEmail });
+        },
+        onSuccess: (_, action) => {
+            toast({
+                title: action === 'subscribe' ? "Subscribed!" : "Unsubscribed",
+                description: action === 'subscribe'
+                    ? "Welcome to our newsletter."
+                    : "You have been removed from our mailing list."
+            });
+            setIsNewsletterOpen(false);
+        },
+        onError: (error: Error) => {
+            toast({ title: "Error", description: error.message, variant: "destructive" });
+        }
+    });
+
     const changePasswordMutation = useMutation({
         mutationFn: async () => {
             if (passwordForm.new !== passwordForm.confirm) throw new Error("Passwords do not match");
@@ -111,22 +148,68 @@ export default function Account() {
         }
     });
 
-    const newsletterMutation = useMutation({
-        mutationFn: async (action: 'subscribe' | 'unsubscribe') => {
-            if (action === 'subscribe') {
-                await apiRequest("POST", "/api/newsletter/subscribe", { email: newsletterEmail });
-            } else {
-                await apiRequest("POST", "/api/newsletter/unsubscribe", { email: newsletterEmail });
-            }
+    const addAddressMutation = useMutation({
+        mutationFn: async (address: Partial<Address>) => {
+            const res = await apiRequest("POST", "/api/user/addresses", address);
+            return res.json();
         },
         onSuccess: () => {
-            toast({ title: "Success", description: "Newsletter preferences updated" });
-            setIsNewsletterOpen(false);
-        },
-        onError: () => {
-            toast({ title: "Error", description: "Failed to update newsletter settings", variant: "destructive" });
+            queryClient.invalidateQueries({ queryKey: ["/api/user/addresses"] });
+            toast({ title: "Success", description: "Address added successfully" });
         }
     });
+
+    const updateAddressMutation = useMutation({
+        mutationFn: async ({ id, address }: { id: number, address: Partial<Address> }) => {
+            const res = await apiRequest("PATCH", `/api/user/addresses/${id}`, address);
+            return res.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["/api/user/addresses"] });
+            toast({ title: "Success", description: "Address updated successfully" });
+        }
+    });
+
+    const deleteAddressMutation = useMutation({
+        mutationFn: async (id: number) => {
+            await apiRequest("DELETE", `/api/user/addresses/${id}`);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["/api/user/addresses"] });
+            toast({ title: "Success", description: "Address deleted successfully" });
+        }
+    });
+
+    const [isAddressOpen, setIsAddressOpen] = useState(false);
+    const [editingAddress, setEditingAddress] = useState<Address | null>(null);
+    const [addressForm, setAddressForm] = useState<Partial<Address>>({
+        fullName: "",
+        addressLine1: "",
+        addressLine2: "",
+        city: "",
+        zipCode: "",
+        phoneNumber: "",
+        isDefault: false
+    });
+
+    const handleAddressSubmit = () => {
+        if (editingAddress) {
+            updateAddressMutation.mutate({ id: editingAddress.id, address: addressForm });
+        } else {
+            addAddressMutation.mutate(addressForm);
+        }
+        setIsAddressOpen(false);
+        setEditingAddress(null);
+        setAddressForm({
+            fullName: "",
+            addressLine1: "",
+            addressLine2: "",
+            city: "",
+            zipCode: "",
+            phoneNumber: "",
+            isDefault: false
+        });
+    };
 
     if (!user) return null;
 
@@ -187,8 +270,27 @@ export default function Account() {
                         <div className="flex-1">
                             <TabsContent value="profile" className="mt-0 space-y-6">
                                 <Card className="border-none shadow-sm bg-secondary/10">
-                                    <CardHeader>
+                                    <CardHeader className="flex flex-row items-center justify-between">
                                         <CardTitle className="tracking-tighter">Profile Information</CardTitle>
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="font-bold uppercase tracking-widest text-[10px]"
+                                            onClick={() => {
+                                                if (isEditingProfile) {
+                                                    updateProfileMutation.mutate(profileForm);
+                                                } else {
+                                                    setProfileForm({
+                                                        email: user.email || "",
+                                                        phoneNumber: user.phoneNumber || ""
+                                                    });
+                                                    setIsEditingProfile(true);
+                                                }
+                                            }}
+                                            disabled={updateProfileMutation.isPending}
+                                        >
+                                            {isEditingProfile ? "Save Changes" : "Edit Profile"}
+                                        </Button>
                                     </CardHeader>
                                     <CardContent className="space-y-6">
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -199,6 +301,32 @@ export default function Account() {
                                             <div className="space-y-1">
                                                 <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Account Type</p>
                                                 <p className="font-medium text-lg">{user.isAdmin ? "Administrator" : "Customer"}</p>
+                                            </div>
+                                            <div className="space-y-1">
+                                                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Email Address</p>
+                                                {isEditingProfile ? (
+                                                    <Input
+                                                        value={profileForm.email}
+                                                        onChange={(e) => setProfileForm({ ...profileForm, email: e.target.value })}
+                                                        placeholder="email@example.com"
+                                                        className="mt-1"
+                                                    />
+                                                ) : (
+                                                    <p className="font-medium text-lg">{user.email || "Not set"}</p>
+                                                )}
+                                            </div>
+                                            <div className="space-y-1">
+                                                <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Phone Number</p>
+                                                {isEditingProfile ? (
+                                                    <Input
+                                                        value={profileForm.phoneNumber}
+                                                        onChange={(e) => setProfileForm({ ...profileForm, phoneNumber: e.target.value })}
+                                                        placeholder="0712 345 678"
+                                                        className="mt-1"
+                                                    />
+                                                ) : (
+                                                    <p className="font-medium text-lg">{user.phoneNumber || "Not set"}</p>
+                                                )}
                                             </div>
                                             <div className="space-y-1 col-span-full pt-4 border-t border-primary/10">
                                                 <div className="bg-primary/5 p-6 rounded-2xl flex items-center justify-between overflow-hidden relative">
@@ -222,30 +350,72 @@ export default function Account() {
                                 <h2 className="text-2xl font-bold tracking-tighter mb-6">Your Orders</h2>
                                 {orders && orders.length > 0 ? (
                                     <div className="space-y-4">
-                                        {orders.map((order) => (
+                                        {orders.map((order: OrderWithItems) => (
                                             <Card key={order.id} className="border-none shadow-sm bg-secondary/10 overflow-hidden">
                                                 <div className="p-6 flex flex-col md:flex-row justify-between gap-4">
                                                     <div>
                                                         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Order ID</p>
-                                                        <p className="font-mono text-sm">#{order.id.toString().padStart(6, '0')}</p>
+                                                        <p className="font-mono text-sm font-bold">#{order.id.toString().padStart(6, '0')}</p>
                                                     </div>
                                                     <div>
                                                         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Date</p>
-                                                        <p className="text-sm">{format(new Date(order.createdAt), "PPP")}</p>
+                                                        <p className="text-sm font-medium">{format(new Date(order.createdAt), "PPP")}</p>
                                                     </div>
                                                     <div>
                                                         <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Total</p>
-                                                        <p className="font-bold">{formatCurrency(order.total)}</p>
+                                                        <p className="font-bold text-primary">{formatCurrency(order.total)}</p>
                                                     </div>
-                                                    <div className="flex flex-col items-end gap-2">
-                                                        <span className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium capitalize">
+                                                    <div className="flex flex-col items-end gap-3">
+                                                        <Badge variant="outline" className="px-3 py-1 bg-primary/5 text-primary border-primary/20 rounded-full text-[10px] font-black uppercase tracking-widest">
                                                             {order.status}
-                                                        </span>
-                                                        {order.tracking && order.tracking.length > 0 && (
-                                                            <p className="text-[10px] text-muted-foreground italic">
-                                                                Last Update: {order.tracking[0].description}
-                                                            </p>
-                                                        )}
+                                                        </Badge>
+                                                        <Dialog>
+                                                            <DialogTrigger asChild>
+                                                                <Button variant="ghost" size="sm" className="h-8 px-3 text-[10px] font-black uppercase tracking-widest hover:bg-primary/10">
+                                                                    <Eye className="w-3.5 h-3.5 mr-2" />
+                                                                    View Details
+                                                                </Button>
+                                                            </DialogTrigger>
+                                                            <DialogContent className="max-w-xl rounded-[2rem]">
+                                                                <DialogHeader>
+                                                                    <DialogTitle className="text-2xl font-black tracking-tighter uppercase italic">Order Details #{order.id.toString().padStart(6, '0')}</DialogTitle>
+                                                                </DialogHeader>
+                                                                <div className="space-y-6 py-4">
+                                                                    <div className="space-y-4">
+                                                                        {order.items?.map((item) => (
+                                                                            <div key={item.id} className="flex items-center gap-4 p-4 bg-secondary/10 rounded-2xl">
+                                                                                <div className="w-16 h-16 bg-white rounded-xl overflow-hidden flex-shrink-0">
+                                                                                    <img src={item.product.image} alt={item.product.name} className="w-full h-full object-cover" />
+                                                                                </div>
+                                                                                <div className="flex-grow">
+                                                                                    <p className="font-bold text-sm line-clamp-1">{item.product.name}</p>
+                                                                                    <p className="text-xs text-muted-foreground">Qty: {item.quantity} × {formatCurrency(item.price)}</p>
+                                                                                </div>
+                                                                                <p className="font-black text-sm">{formatCurrency(item.price * item.quantity)}</p>
+                                                                            </div>
+                                                                        ))}
+                                                                    </div>
+                                                                    <div className="space-y-2 pt-4 border-t border-secondary/20">
+                                                                        <div className="flex justify-between text-sm">
+                                                                            <span className="text-muted-foreground font-medium">Subtotal</span>
+                                                                            <span className="font-bold">{formatCurrency(order.subtotal)}</span>
+                                                                        </div>
+                                                                        <div className="flex justify-between text-sm">
+                                                                            <span className="text-muted-foreground font-medium">Tax</span>
+                                                                            <span className="font-bold">{formatCurrency(order.taxAmount)}</span>
+                                                                        </div>
+                                                                        <div className="flex justify-between text-sm">
+                                                                            <span className="text-muted-foreground font-medium">Shipping</span>
+                                                                            <span className="font-bold">{formatCurrency(order.shippingCost)}</span>
+                                                                        </div>
+                                                                        <div className="flex justify-between text-lg pt-2 border-t border-secondary/10">
+                                                                            <span className="font-black uppercase tracking-tighter italic">Total</span>
+                                                                            <span className="font-black text-primary italic">{formatCurrency(order.total)}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </DialogContent>
+                                                        </Dialog>
                                                     </div>
                                                 </div>
                                             </Card>
@@ -334,7 +504,95 @@ export default function Account() {
                             <TabsContent value="addresses" className="mt-0 space-y-6">
                                 <div className="flex justify-between items-center mb-6">
                                     <h2 className="text-2xl font-bold tracking-tighter">Saved Addresses</h2>
-                                    <Button size="sm" className="rounded-xl">Add New Address</Button>
+                                    <Dialog open={isAddressOpen} onOpenChange={(open) => {
+                                        setIsAddressOpen(open);
+                                        if (!open) {
+                                            setEditingAddress(null);
+                                            setAddressForm({
+                                                fullName: "",
+                                                addressLine1: "",
+                                                addressLine2: "",
+                                                city: "",
+                                                zipCode: "",
+                                                phoneNumber: "",
+                                                isDefault: false
+                                            });
+                                        }
+                                    }}>
+                                        <DialogTrigger asChild>
+                                            <Button size="sm" className="rounded-xl">Add New Address</Button>
+                                        </DialogTrigger>
+                                        <DialogContent className="max-w-md">
+                                            <DialogHeader>
+                                                <DialogTitle>{editingAddress ? "Edit Address" : "Add New Address"}</DialogTitle>
+                                            </DialogHeader>
+                                            <div className="grid gap-4 py-4">
+                                                <div className="space-y-2">
+                                                    <Label>Full Name</Label>
+                                                    <Input
+                                                        value={addressForm.fullName}
+                                                        onChange={(e) => setAddressForm({ ...addressForm, fullName: e.target.value })}
+                                                        placeholder="John Doe"
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label>Address Line 1</Label>
+                                                    <Input
+                                                        value={addressForm.addressLine1}
+                                                        onChange={(e) => setAddressForm({ ...addressForm, addressLine1: e.target.value })}
+                                                        placeholder="123 Fashion Ave"
+                                                    />
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label>Address Line 2 (Optional)</Label>
+                                                    <Input
+                                                        value={addressForm.addressLine2 || ""}
+                                                        onChange={(e) => setAddressForm({ ...addressForm, addressLine2: e.target.value })}
+                                                        placeholder="Apt 4B"
+                                                    />
+                                                </div>
+                                                <div className="grid grid-cols-2 gap-4">
+                                                    <div className="space-y-2">
+                                                        <Label>City</Label>
+                                                        <Input
+                                                            value={addressForm.city}
+                                                            onChange={(e) => setAddressForm({ ...addressForm, city: e.target.value })}
+                                                            placeholder="Nairobi"
+                                                        />
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        <Label>Zip Code</Label>
+                                                        <Input
+                                                            value={addressForm.zipCode}
+                                                            onChange={(e) => setAddressForm({ ...addressForm, zipCode: e.target.value })}
+                                                            placeholder="00100"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div className="space-y-2">
+                                                    <Label>Phone Number</Label>
+                                                    <Input
+                                                        value={addressForm.phoneNumber}
+                                                        onChange={(e) => setAddressForm({ ...addressForm, phoneNumber: e.target.value })}
+                                                        placeholder="+254 700 000000"
+                                                    />
+                                                </div>
+                                                <div className="flex items-center space-x-2">
+                                                    <Checkbox
+                                                        id="isDefault"
+                                                        checked={addressForm.isDefault}
+                                                        onCheckedChange={(checked) => setAddressForm({ ...addressForm, isDefault: !!checked })}
+                                                    />
+                                                    <Label htmlFor="isDefault">Set as default address</Label>
+                                                </div>
+                                            </div>
+                                            <DialogFooter>
+                                                <Button onClick={handleAddressSubmit} className="w-full">
+                                                    {editingAddress ? "Update Address" : "Save Address"}
+                                                </Button>
+                                            </DialogFooter>
+                                        </DialogContent>
+                                    </Dialog>
                                 </div>
 
                                 {addresses && addresses.length > 0 ? (
@@ -353,8 +611,27 @@ export default function Account() {
                                                         <p>{addr.phoneNumber}</p>
                                                     </div>
                                                     <div className="flex gap-2 pt-2">
-                                                        <Button variant="ghost" size="sm" className="h-8 px-2 text-xs">Edit</Button>
-                                                        <Button variant="ghost" size="sm" className="h-8 px-2 text-xs text-destructive hover:text-destructive hover:bg-destructive/10">Delete</Button>
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            className="h-8 px-2 text-xs"
+                                                            onClick={() => {
+                                                                setEditingAddress(addr);
+                                                                setAddressForm(addr);
+                                                                setIsAddressOpen(true);
+                                                            }}
+                                                        >
+                                                            Edit
+                                                        </Button>
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="sm"
+                                                            className="h-8 px-2 text-xs text-destructive hover:text-destructive hover:bg-destructive/10"
+                                                            onClick={() => deleteAddressMutation.mutate(addr.id)}
+                                                            disabled={deleteAddressMutation.isPending}
+                                                        >
+                                                            {deleteAddressMutation.isPending ? "Deleting..." : "Delete"}
+                                                        </Button>
                                                     </div>
                                                 </CardContent>
                                             </Card>

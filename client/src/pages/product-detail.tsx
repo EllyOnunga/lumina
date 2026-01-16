@@ -262,7 +262,7 @@ export default function ProductDetail() {
                     <RefreshCcw className="w-3.5 h-3.5" />
                     Logistics Policy
                   </Button>
-                  <SizeGuide category={product.category} />
+                  <SizeGuide category={product.category} content={product.sizeGuide || undefined} />
                 </div>
 
                 <p className="text-5xl font-black tracking-tighter italic text-primary">{formatPrice(product.price)}</p>

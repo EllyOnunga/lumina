@@ -58,6 +58,16 @@ export async function registerRoutes(
     const isFeatured = req.query.isFeatured === "true" ? true : req.query.isFeatured === "false" ? false : undefined;
     const isNewArrival = req.query.isNewArrival === "true" ? true : req.query.isNewArrival === "false" ? false : undefined;
 
+    // Extract attributes (anything not a reserved param)
+    const reservedParams = ['search', 'category', 'brand', 'minPrice', 'maxPrice', 'sort', 'isFeatured', 'isNewArrival', 'limit', 'offset', 'tags'];
+    const attributes: Record<string, string[]> = {};
+
+    Object.entries(req.query).forEach(([key, value]) => {
+      if (!reservedParams.includes(key) && value) {
+        attributes[key] = Array.isArray(value) ? value as string[] : [value as string];
+      }
+    });
+
     const products = await storage.getProducts({
       search,
       category,
@@ -66,7 +76,8 @@ export async function registerRoutes(
       maxPrice,
       sort,
       isFeatured,
-      isNewArrival
+      isNewArrival,
+      attributes
     });
     res.json(products);
   });

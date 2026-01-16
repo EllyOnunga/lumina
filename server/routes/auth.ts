@@ -133,3 +133,20 @@ authRouter.post("/verify-email", async (req, res) => {
         res.status(500).send("An error occurred");
     }
 });
+
+// Update user profile
+authRouter.patch("/profile", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    try {
+        const { email, phoneNumber, preferences } = req.body;
+        const updatedUser = await storage.updateUser(req.user!.id, {
+            email,
+            phoneNumber,
+            preferences
+        });
+        res.json(updatedUser);
+    } catch (error) {
+        console.error("Profile update error:", error);
+        res.status(500).send("Failed to update profile");
+    }
+});

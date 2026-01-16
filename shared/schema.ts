@@ -15,6 +15,7 @@ export const users = pgTable("users", {
   role: text("role").default("user").notNull(), // 'user', 'admin', 'manager', 'editor'
   preferences: text("preferences").array(), // Preferred categories e.g. ["Men", "Accessories"]
   loyaltyPoints: integer("loyalty_points").default(0).notNull(),
+  phoneNumber: text("phone_number"),
 });
 
 export const categories = pgTable("categories", {

@@ -18,6 +18,14 @@ export function FloatingSearch({ onSearch }: FloatingSearchProps) {
 
     // Parse initial filters from URL
     const searchParams = new URLSearchParams(window.location.search);
+    const initialAttributes: Record<string, string[]> = {};
+    searchParams.forEach((value, key) => {
+        if (!["search", "category", "brand", "minPrice", "maxPrice"].includes(key)) {
+            if (!initialAttributes[key]) initialAttributes[key] = [];
+            initialAttributes[key].push(value);
+        }
+    });
+
     const initialFilters: ActiveFilters = {
         search: searchParams.get("search") || "",
         category: searchParams.getAll("category").map(Number),
@@ -26,7 +34,7 @@ export function FloatingSearch({ onSearch }: FloatingSearchProps) {
             Number(searchParams.get("minPrice")) || 0,
             Number(searchParams.get("maxPrice")) || 1000000
         ],
-        attributes: {} // Note: Complex attribute parsing might be needed if they are in URL
+        attributes: initialAttributes
     };
 
     const [filters, setFilters] = useState<ActiveFilters>(initialFilters);
@@ -44,6 +52,14 @@ export function FloatingSearch({ onSearch }: FloatingSearchProps) {
     const openSearch = useCallback(() => {
         // Re-read params when opening to ensure sync
         const currentParams = new URLSearchParams(window.location.search);
+        const currentAttributes: Record<string, string[]> = {};
+        currentParams.forEach((value, key) => {
+            if (!["search", "category", "brand", "minPrice", "maxPrice"].includes(key)) {
+                if (!currentAttributes[key]) currentAttributes[key] = [];
+                currentAttributes[key].push(value);
+            }
+        });
+
         setFilters({
             search: currentParams.get("search") || "",
             category: currentParams.getAll("category").map(Number),
@@ -52,7 +68,7 @@ export function FloatingSearch({ onSearch }: FloatingSearchProps) {
                 Number(currentParams.get("minPrice")) || 0,
                 Number(currentParams.get("maxPrice")) || 1000000
             ],
-            attributes: {}
+            attributes: currentAttributes
         });
         setIsOpen(true);
         setShowMobileFilters(false);
@@ -82,6 +98,11 @@ export function FloatingSearch({ onSearch }: FloatingSearchProps) {
         filters.brand.forEach(b => params.append("brand", b));
         if (filters.price[0] > 0) params.set("minPrice", filters.price[0].toString());
         if (filters.price[1] < 1000000) params.set("maxPrice", filters.price[1].toString());
+
+        // Attributes
+        Object.entries(filters.attributes).forEach(([key, values]) => {
+            values.forEach(v => params.append(key, v));
+        });
 
         // Use #products to scroll to result
         setLocation(`/?${params.toString()}#products`);
