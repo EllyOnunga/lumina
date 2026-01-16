@@ -4,8 +4,9 @@ import pg from "pg";
 import path from "path";
 import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const currentDir = typeof __dirname !== 'undefined'
+    ? __dirname
+    : path.dirname(fileURLToPath(import.meta.url));
 
 async function main() {
     if (!process.env.DATABASE_URL) {
@@ -22,7 +23,7 @@ async function main() {
     console.log("Running migrations...");
 
     await migrate(db, {
-        migrationsFolder: path.join(__dirname, "../migrations"),
+        migrationsFolder: path.join(currentDir, "../migrations"),
     });
 
     console.log("Migrations completed!");
