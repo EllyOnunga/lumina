@@ -10,6 +10,8 @@ services:
       - PORT=5000
       - DATABASE_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@db:5432/${DB_NAME:-lumina}
       - SESSION_SECRET=${SESSION_SECRET:-some_secret_at_least_32_characters_long}
+      - ALLOW_INSECURE_SESSION=true
+      - SEED_DB=${SEED_DB:-true}
     depends_on:
       db:
         condition: service_healthy

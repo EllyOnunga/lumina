@@ -148,9 +148,11 @@ export const sessionConfig = {
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: process.env.NODE_ENV === "production", // HTTPS only in production
+        // Only require secure cookies if explicitly in production AND not on localhost
+        // This allows local Docker production builds (without SSL) to work
+        secure: process.env.NODE_ENV === "production" && !process.env.ALLOW_INSECURE_SESSION,
         httpOnly: true, // Prevent XSS
         maxAge: 24 * 60 * 60 * 1000, // 24 hours
-        sameSite: "strict" as const, // CSRF protection
+        sameSite: "lax", // Use 'lax' for better compatibility with local dev and redirects
     },
 };
