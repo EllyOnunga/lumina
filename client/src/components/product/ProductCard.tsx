@@ -10,9 +10,10 @@ import { useCart } from "@/hooks/use-cart";
 
 interface ProductCardProps {
     product: Product;
+    originalPrice?: number;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
+export function ProductCard({ product, originalPrice }: ProductCardProps) {
     const { toggleWishlist, isInWishlist } = useWishlist();
     const { addToCartAsync, isAddingToCart } = useCart();
     const { formatPrice } = useCurrency();
@@ -94,9 +95,16 @@ export function ProductCard({ product }: ProductCardProps) {
                 </div>
 
                 <div className="flex items-center justify-between gap-2 pt-4 border-t border-border/20">
-                    <p className="font-black text-xl tracking-tighter text-foreground">
-                        {formatPrice(product.price)}
-                    </p>
+                    <div className="flex items-baseline gap-2">
+                        <p className="font-black text-xl tracking-tighter text-foreground">
+                            {formatPrice(product.price)}
+                        </p>
+                        {originalPrice && originalPrice > product.price && (
+                            <p className="text-xs text-muted-foreground line-through decoration-destructive/50">
+                                {formatPrice(originalPrice)}
+                            </p>
+                        )}
+                    </div>
                     <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60">Detail ↗</span>
                 </div>
             </div>

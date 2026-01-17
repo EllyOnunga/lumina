@@ -93,19 +93,19 @@ export default function Marketplace() {
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
                     <div className="space-y-2">
-                        <h1 className="text-5xl font-black tracking-tighter uppercase">App Marketplace</h1>
+                        <h1 className="text-5xl font-black tracking-tighter uppercase text-foreground">App Marketplace</h1>
                         <p className="text-muted-foreground text-lg max-w-2xl">
                             Extend the functionality of Lumina with premium integrations.
                             Connect your ERP, CRM, and logistics providers seamlessly.
                         </p>
                     </div>
-                    <div className="flex gap-2 bg-secondary/10 p-1.5 rounded-2xl border border-secondary/10 overflow-x-auto no-scrollbar">
+                    <div className="flex gap-2 bg-secondary/10 dark:bg-white/5 p-1.5 rounded-2xl border border-border dark:border-white/10 overflow-x-auto no-scrollbar">
                         {categories.map(cat => (
                             <button
                                 key={cat}
                                 onClick={() => setActiveCategory(cat)}
                                 className={`px-6 py-2.5 rounded-xl font-bold transition-all ${activeCategory === cat
-                                    ? "bg-background shadow-lg text-foreground scale-105"
+                                    ? "bg-background dark:bg-black shadow-lg text-foreground scale-105"
                                     : "text-muted-foreground hover:text-foreground"
                                     }`}
                             >
@@ -123,12 +123,12 @@ export default function Marketplace() {
                         const isConfigured = plugin.status !== "not_configured";
 
                         return (
-                            <Card key={plugin.id} className="group relative overflow-hidden border-none shadow-2xl bg-secondary/5 hover:bg-secondary/10 transition-all duration-500 rounded-[2.5rem] flex flex-col">
+                            <Card key={plugin.id} className="group relative overflow-hidden border border-border dark:border-white/5 shadow-2xl bg-card dark:bg-black hover:bg-secondary/5 dark:hover:bg-white/2 transition-all duration-500 rounded-[2.5rem] flex flex-col">
                                 <div className={`absolute top-0 left-0 w-2 h-full ${isActive ? 'bg-green-500' : 'bg-primary/20'}`} />
 
                                 <CardHeader className="p-8 pb-4">
                                     <div className="flex justify-between items-start mb-6">
-                                        <div className="bg-background p-4 rounded-3xl shadow-xl group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500 border border-secondary/10">
+                                        <div className="bg-background dark:bg-white/5 p-4 rounded-3xl shadow-xl group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500 border border-border dark:border-white/10">
                                             <Icon className="w-8 h-8 text-primary" />
                                         </div>
                                         <div className="flex flex-col items-end gap-2">
@@ -138,14 +138,14 @@ export default function Marketplace() {
                                             <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">{plugin.category}</span>
                                         </div>
                                     </div>
-                                    <CardTitle className="text-2xl font-black tracking-tighter mb-2">{plugin.name}</CardTitle>
-                                    <CardDescription className="text-sm font-medium leading-relaxed line-clamp-2">
+                                    <CardTitle className="text-2xl font-black tracking-tighter mb-2 text-foreground">{plugin.name}</CardTitle>
+                                    <CardDescription className="text-sm font-medium leading-relaxed line-clamp-2 text-muted-foreground">
                                         {plugin.description}
                                     </CardDescription>
                                 </CardHeader>
 
                                 <CardContent className="px-8 flex-1">
-                                    <div className="space-y-4 pt-4 border-t border-secondary/5">
+                                    <div className="space-y-4 pt-4 border-t border-border dark:border-white/5">
                                         <div className="flex items-center gap-3 text-xs font-bold text-muted-foreground">
                                             <CheckCircle2 className={`w-4 h-4 ${isConfigured ? 'text-green-500' : 'text-muted-foreground/30'}`} />
                                             API Integration Ready
@@ -163,7 +163,7 @@ export default function Marketplace() {
                                             <>
                                                 <Button
                                                     variant="outline"
-                                                    className="flex-1 rounded-2xl h-12 border-2 font-bold"
+                                                    className="flex-1 rounded-2xl h-12 border-2 font-bold dark:border-white/10 dark:text-white"
                                                     onClick={() => setSelectedPlugin(plugin)}
                                                 >
                                                     <Settings className="w-4 h-4 mr-2" />
@@ -199,53 +199,53 @@ export default function Marketplace() {
                     })}
 
                     {/* Coming Soon Placeholder */}
-                    <div className="border-4 border-dashed border-secondary/10 rounded-[2.5rem] flex flex-col items-center justify-center p-12 text-center space-y-4 hover:border-primary/20 transition-colors">
-                        <div className="bg-secondary/10 p-6 rounded-full">
+                    <div className="border-4 border-dashed border-border dark:border-white/10 rounded-[2.5rem] flex flex-col items-center justify-center p-12 text-center space-y-4 hover:border-primary/20 transition-colors bg-secondary/5 dark:bg-white/2">
+                        <div className="bg-secondary/10 dark:bg-white/5 p-6 rounded-full">
                             <Plus className="w-8 h-8 text-muted-foreground" />
                         </div>
-                        <h3 className="text-xl font-black tracking-tighter uppercase opacity-50">Create Plugin</h3>
+                        <h3 className="text-xl font-black tracking-tighter uppercase opacity-50 text-foreground">Create Plugin</h3>
                         <p className="text-xs font-medium text-muted-foreground max-w-[200px]">
                             Access our SDK to build your own custom ecosystem integrations.
                         </p>
-                        <Button variant="link" className="font-black uppercase tracking-widest text-[10px]">Developer Docs</Button>
+                        <Button variant="link" className="font-black uppercase tracking-widest text-[10px] text-primary">Developer Docs</Button>
                     </div>
                 </div>
 
                 {/* Config Dialog */}
                 <Dialog open={!!selectedPlugin} onOpenChange={() => setSelectedPlugin(null)}>
-                    <DialogContent className="sm:max-w-[425px] rounded-[2rem] border-none shadow-2xl">
+                    <DialogContent className="sm:max-w-[425px] rounded-[2rem] border border-border dark:border-white/10 shadow-2xl bg-background dark:bg-black">
                         <DialogHeader className="space-y-4">
                             <div className="flex items-center gap-4">
-                                <div className="bg-primary/10 p-3 rounded-2xl">
+                                <div className="bg-primary/10 p-3 rounded-2xl text-primary">
                                     {selectedPlugin && (ICON_MAP[selectedPlugin.icon || ""] ?
                                         (() => { const Icon = ICON_MAP[selectedPlugin.icon!]; return <Icon className="w-6 h-6 text-primary" />; })() :
                                         <Plug className="w-6 h-6 text-primary" />
                                     )}
                                 </div>
                                 <div>
-                                    <DialogTitle className="text-2xl font-black tracking-tighter">
+                                    <DialogTitle className="text-2xl font-black tracking-tighter text-foreground">
                                         Configure {selectedPlugin?.name}
                                     </DialogTitle>
-                                    <DialogDescription className="font-medium">
+                                    <DialogDescription className="font-medium text-muted-foreground">
                                         Enter your credentials to link accounts.
                                     </DialogDescription>
                                 </div>
                             </div>
                         </DialogHeader>
-                        <div className="space-y-6 py-6 border-t border-b border-secondary/10">
+                        <div className="space-y-6 py-6 border-t border-b border-border dark:border-white/5">
                             <div className="space-y-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="apiKey" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">API Key / Client ID</Label>
-                                    <Input id="apiKey" placeholder="Lum_live_..." className="bg-secondary/5 border-none h-12 rounded-xl" defaultValue={(selectedPlugin?.config as PluginConfig)?.apiKey || ""} />
+                                    <Input id="apiKey" placeholder="Lum_live_..." className="bg-secondary/5 dark:bg-white/5 border-none h-12 rounded-xl text-foreground" defaultValue={(selectedPlugin?.config as PluginConfig)?.apiKey || ""} />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="webhook" className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Secret Endpoint</Label>
-                                    <Input id="webhook" placeholder="https://api.lumina.io/wh/..." className="bg-secondary/5 border-none h-12 rounded-xl" />
+                                    <Input id="webhook" placeholder="https://api.lumina.io/wh/..." className="bg-secondary/5 dark:bg-white/5 border-none h-12 rounded-xl text-foreground" />
                                 </div>
                             </div>
-                            <div className="bg-blue-500/5 p-4 rounded-2xl flex gap-3 items-start border border-blue-500/10">
+                            <div className="bg-blue-500/5 dark:bg-blue-500/10 p-4 rounded-2xl flex gap-3 items-start border border-blue-500/20">
                                 <Info className="w-5 h-5 text-blue-500 mt-0.5" />
-                                <p className="text-xs font-medium text-blue-700/80 leading-relaxed">
+                                <p className="text-xs font-medium text-blue-700/80 dark:text-blue-400/80 leading-relaxed">
                                     Encryption active. Your keys are stored using AES-256 for maximum security clearance.
                                 </p>
                             </div>

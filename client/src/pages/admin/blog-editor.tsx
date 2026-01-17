@@ -86,8 +86,8 @@ export default function BlogEditor() {
         <Layout>
             <div className="container mx-auto px-4 py-12 max-w-4xl">
                 <div className="flex items-center gap-4 mb-8">
-                    <Link href="/admin/blog"><Button variant="ghost"><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button></Link>
-                    <h1 className="text-3xl font-bold">{isEditing ? "Edit Post" : "New Post"}</h1>
+                    <Link href="/admin/blog"><Button variant="ghost" className="text-foreground hover:bg-secondary/10 dark:hover:bg-white/10"><ArrowLeft className="mr-2 h-4 w-4" /> Back</Button></Link>
+                    <h1 className="text-3xl font-black text-foreground">{isEditing ? "Edit Post" : "New Post"}</h1>
                 </div>
 
                 <Form {...form}>
@@ -95,16 +95,16 @@ export default function BlogEditor() {
                         <div className="grid md:grid-cols-2 gap-8">
                             <FormField control={form.control} name="title" render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Title</FormLabel>
-                                    <FormControl><Input {...field} /></FormControl>
+                                    <FormLabel className="text-foreground">Title</FormLabel>
+                                    <FormControl><Input {...field} className="bg-background dark:bg-black border-border dark:border-white/10 text-foreground" /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
                             <FormField control={form.control} name="slug" render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Slug</FormLabel>
-                                    <FormControl><Input {...field} /></FormControl>
-                                    <FormDescription>URL-friendly name (e.g. my-first-post)</FormDescription>
+                                    <FormLabel className="text-foreground">Slug</FormLabel>
+                                    <FormControl><Input {...field} className="bg-background dark:bg-black border-border dark:border-white/10 text-foreground" /></FormControl>
+                                    <FormDescription className="text-muted-foreground">URL-friendly name (e.g. my-first-post)</FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )} />
@@ -112,58 +112,58 @@ export default function BlogEditor() {
 
                         <FormField control={form.control} name="content" render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Content (HTML supported)</FormLabel>
-                                <FormControl><Textarea {...field} className="min-h-[400px] font-mono" /></FormControl>
+                                <FormLabel className="text-foreground">Content (HTML supported)</FormLabel>
+                                <FormControl><Textarea {...field} className="min-h-[400px] font-mono bg-background dark:bg-black border-border dark:border-white/10 text-foreground" /></FormControl>
                                 <FormMessage />
                             </FormItem>
                         )} />
 
                         <FormField control={form.control} name="excerpt" render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Excerpt</FormLabel>
-                                <FormControl><Textarea {...field} className="h-24" /></FormControl>
+                                <FormLabel className="text-foreground">Excerpt</FormLabel>
+                                <FormControl><Textarea {...field} className="h-24 bg-background dark:bg-black border-border dark:border-white/10 text-foreground" /></FormControl>
                                 <FormMessage />
                             </FormItem>
                         )} />
 
                         <FormField control={form.control} name="coverImage" render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Cover Image URL</FormLabel>
-                                <FormControl><Input {...field} value={field.value || ""} /></FormControl>
+                                <FormLabel className="text-foreground">Cover Image URL</FormLabel>
+                                <FormControl><Input {...field} value={field.value || ""} className="bg-background dark:bg-black border-border dark:border-white/10 text-foreground" /></FormControl>
                                 <FormMessage />
                             </FormItem>
                         )} />
 
-                        <div className="grid md:grid-cols-2 gap-8 pt-4 border-t">
+                        <div className="grid md:grid-cols-2 gap-8 pt-4 border-t border-border dark:border-white/10">
                             <FormField control={form.control} name="metaTitle" render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>SEO Meta Title</FormLabel>
-                                    <FormControl><Input {...field} value={field.value || ""} /></FormControl>
+                                    <FormLabel className="text-foreground">SEO Meta Title</FormLabel>
+                                    <FormControl><Input {...field} value={field.value || ""} className="bg-background dark:bg-black border-border dark:border-white/10 text-foreground" /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
                             <FormField control={form.control} name="metaDescription" render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>SEO Meta Description</FormLabel>
-                                    <FormControl><Input {...field} value={field.value || ""} /></FormControl>
+                                    <FormLabel className="text-foreground">SEO Meta Description</FormLabel>
+                                    <FormControl><Input {...field} value={field.value || ""} className="bg-background dark:bg-black border-border dark:border-white/10 text-foreground" /></FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )} />
                         </div>
 
                         <FormField control={form.control} name="isPublished" render={({ field }) => (
-                            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                            <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-xl border border-border dark:border-white/10 p-4 bg-secondary/5 dark:bg-white/2">
                                 <FormControl>
                                     <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                                 </FormControl>
                                 <div className="space-y-1 leading-none">
-                                    <FormLabel>Published</FormLabel>
-                                    <FormDescription>Check to make this post visible to everyone.</FormDescription>
+                                    <FormLabel className="text-foreground">Published</FormLabel>
+                                    <FormDescription className="text-muted-foreground">Check to make this post visible to everyone.</FormDescription>
                                 </div>
                             </FormItem>
                         )} />
 
-                        <Button type="submit" disabled={mutation.isPending} className="w-full">
+                        <Button type="submit" disabled={mutation.isPending} className="w-full h-12 rounded-xl font-bold shadow-lg shadow-primary/20">
                             {mutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : (isEditing ? "Update Post" : "Create Post")}
                         </Button>
                     </form>

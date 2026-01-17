@@ -107,6 +107,7 @@ export interface IStorage {
 
   getCategories(): Promise<Category[]>;
   getCategory(id: number): Promise<Category | undefined>;
+  getCategoriesWithProducts(): Promise<(Category & { products: Product[] })[]>;
   createCategory(category: { name: string; slug: string; parentId?: number | null; description?: string }): Promise<Category>;
   getTags(): Promise<Tag[]>;
   createTag(tag: { name: string; slug: string }): Promise<Tag>;
@@ -963,6 +964,26 @@ export class DatabaseStorage implements IStorage {
   async getCategory(id: number): Promise<Category | undefined> {
     const [category] = await db.select().from(categories).where(eq(categories.id, id));
     return category;
+  }
+
+  async getCategoriesWithProducts(): Promise<(Category & { products: Product[] })[]> {
+    const allCategories = await db.select().from(categories);
+    const results = [];
+
+    for (const cat of allCategories) {
+      const pc = await db.select({ productId: productCategories.productId })
+        .from(productCategories)
+        .where(eq(productCategories.categoryId, cat.id))
+        .limit(4);
+
+      if (pc.length > 0) {
+        const catProducts = await db.select()
+          .from(products)
+          .where(inArray(products.id, pc.map(x => x.productId)));
+        results.push({ ...cat, products: catProducts });
+      }
+    }
+    return results;
   }
 
   async createCategory(insertCategory: { name: string; slug: string; parentId?: number | null; description?: string }): Promise<Category> {

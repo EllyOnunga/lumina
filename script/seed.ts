@@ -4,7 +4,7 @@ import { db } from "../server/db";
 import {
     products, categories, productCategories, reviews, questions,
     inventory, orderItems, cartItems, wishlists, bundleItems,
-    productTags, tags, settings, currencies
+    productTags, tags, settings, currencies, flashSales, flashSaleProducts
 } from "../shared/schema";
 
 async function seed() {
@@ -23,6 +23,8 @@ async function seed() {
         await db.delete(orderItems);
         await db.delete(wishlists);
         await db.delete(bundleItems);
+        await db.delete(flashSaleProducts);
+        await db.delete(flashSales);
 
         // Parent tables
         await db.delete(products);
@@ -533,6 +535,31 @@ async function seed() {
 
                 console.log(`Created product: ${item.name} in ${catName}`);
             }
+        }
+
+        // 8. Seed Flash Sales
+        console.log("Seeding flash sales...");
+        const now = new Date();
+        const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+
+        const [flashSale] = await db.insert(flashSales).values({
+            name: "Midnight Madness",
+            description: "24h global clearance event",
+            startTime: now,
+            endTime: tomorrow,
+            isActive: true
+        }).returning();
+
+        // Pick some products for the flash sale
+        const allProducts = await db.select().from(products).limit(4);
+        for (const p of allProducts) {
+            await db.insert(flashSaleProducts).values({
+                flashSaleId: flashSale.id,
+                productId: p.id,
+                salePrice: Math.floor(p.price * 0.7), // 30% off
+                stockLimit: 10,
+                soldCount: 2
+            });
         }
 
         console.log("Seeding complete!");

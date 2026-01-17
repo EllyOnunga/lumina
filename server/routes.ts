@@ -248,6 +248,20 @@ export async function registerRoutes(
     res.json(cart);
   });
 
+  // Marketing Features
+  app.get("/api/flash-sales/active", async (req, res) => {
+    const sales = await storage.getFlashSales(true);
+    const detailedSales = await Promise.all(
+      sales.map(s => storage.getFlashSale(s.id))
+    );
+    res.json(detailedSales.filter(Boolean));
+  });
+
+  app.get("/api/categories/with-products", async (req, res) => {
+    const categoriesWithProducts = await storage.getCategoriesWithProducts();
+    res.json(categoriesWithProducts);
+  });
+
   // Wishlist
   app.get("/api/wishlist", async (req, res) => {
     if (!req.isAuthenticated()) return res.sendStatus(401);

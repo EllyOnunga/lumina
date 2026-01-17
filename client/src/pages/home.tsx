@@ -3,6 +3,8 @@ import { Layout } from "@/components/layout/Layout";
 import type { Product, User } from "@shared/schema";
 import { Hero } from "@/components/home/Hero";
 import { IsFeatured } from "@/components/home/IsFeatured";
+import { FlashSaleSection } from "@/components/home/FlashSaleSection";
+import { CategoryExplorer } from "@/components/home/CategoryExplorer";
 import { ProductCard } from "@/components/product/ProductCard";
 import { GridSkeleton } from "@/components/ui/skeletons";
 
@@ -63,6 +65,8 @@ export default function Home() {
     <Layout>
       <Hero />
       <IsFeatured />
+      <FlashSaleSection />
+      <CategoryExplorer />
 
       {/* Product Catalog with Search & Filter */}
       <section className="py-24 container mx-auto px-4" id="products">

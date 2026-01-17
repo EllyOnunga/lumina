@@ -74,32 +74,32 @@ export function AdminOverview({ products, orders, users }: AdminOverviewProps) {
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="flex justify-between items-center bg-secondary/10 p-8 rounded-[2.5rem]">
+            <div className="flex justify-between items-center bg-card dark:bg-white/5 p-8 rounded-[2.5rem] border border-border dark:border-white/5">
                 <div>
-                    <h1 className="text-4xl font-black tracking-tighter uppercase">Command Center</h1>
+                    <h1 className="text-4xl font-black tracking-tighter uppercase text-foreground">Command Center</h1>
                     <p className="text-muted-foreground font-medium">Real-time intelligence and ecosystem vitals</p>
                 </div>
                 <div className="flex gap-4">
-                    <div className="flex items-center gap-2 bg-background px-4 py-2 rounded-xl border border-secondary/10 shadow-sm">
+                    <div className="flex items-center gap-2 bg-background dark:bg-black px-4 py-2 rounded-xl border border-border dark:border-white/10 shadow-sm">
                         <Activity className="w-4 h-4 text-green-500" />
-                        <span className="text-xs font-bold uppercase tracking-widest">Live Updates Active</span>
+                        <span className="text-xs font-bold uppercase tracking-widest text-foreground">Live Updates Active</span>
                     </div>
                 </div>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                 {stats.map((stat, i) => (
-                    <Card key={i} className="border border-secondary/10 shadow-xl bg-white rounded-[2rem] overflow-hidden group hover:scale-[1.02] hover:-translate-y-1 hover:shadow-accent/5 transition-all duration-500">
+                    <Card key={i} className="border border-border dark:border-white/5 shadow-xl bg-card dark:bg-zinc-900/50 rounded-[2rem] overflow-hidden group hover:scale-[1.02] hover:-translate-y-1 hover:shadow-accent/5 transition-all duration-500">
                         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                             <CardTitle className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
                                 {stat.title}
                             </CardTitle>
-                            <div className="p-3 bg-secondary/5 rounded-xl group-hover:bg-accent/10 transition-colors">
+                            <div className="p-3 bg-secondary/10 dark:bg-white/5 rounded-xl group-hover:bg-accent/10 transition-colors">
                                 <stat.icon className="w-5 h-5 text-accent" />
                             </div>
                         </CardHeader>
                         <CardContent>
-                            <div className="text-3xl font-black tracking-tighter mb-1">{stat.value}</div>
+                            <div className="text-3xl font-black tracking-tighter mb-1 text-foreground">{stat.value}</div>
                             <p className="text-xs text-muted-foreground font-bold flex items-center gap-1">
                                 {stat.trend === "up" && <ArrowUpRight className="w-3 h-3 text-green-500" />}
                                 {stat.trend === "down" && <ArrowDownRight className="w-3 h-3 text-red-500" />}
@@ -111,9 +111,9 @@ export function AdminOverview({ products, orders, users }: AdminOverviewProps) {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
-                <Card className="md:col-span-4 border-none shadow-2xl bg-background rounded-[2.5rem] p-6 lg:p-8">
+                <Card className="md:col-span-4 border-none shadow-2xl bg-card dark:bg-zinc-900/50 rounded-[2.5rem] p-6 lg:p-8">
                     <CardHeader className="px-0 pt-0">
-                        <CardTitle className="text-2xl font-black tracking-tighter uppercase mb-2">Revenue Velocity</CardTitle>
+                        <CardTitle className="text-2xl font-black tracking-tighter uppercase mb-2 text-foreground">Revenue Velocity</CardTitle>
                         <p className="text-sm font-medium text-muted-foreground">Daily transaction volume across all global nodes.</p>
                     </CardHeader>
                     <div className="h-[350px] mt-4">
@@ -125,7 +125,7 @@ export function AdminOverview({ products, orders, users }: AdminOverviewProps) {
                                         <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
                                     </linearGradient>
                                 </defs>
-                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--secondary)/0.1)" />
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.5} />
                                 <XAxis
                                     dataKey="name"
                                     axisLine={false}
@@ -141,12 +141,12 @@ export function AdminOverview({ products, orders, users }: AdminOverviewProps) {
                                 />
                                 <Tooltip
                                     contentStyle={{
-                                        backgroundColor: 'hsl(var(--background))',
-                                        border: 'none',
+                                        backgroundColor: 'hsl(var(--card))',
+                                        border: '1px solid hsl(var(--border))',
                                         borderRadius: '1rem',
                                         boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)'
                                     }}
-                                    itemStyle={{ fontWeight: 900, fontSize: '0.875rem' }}
+                                    itemStyle={{ fontWeight: 900, fontSize: '0.875rem', color: 'hsl(var(--foreground))' }}
                                 />
                                 <Area
                                     type="monotone"
@@ -161,29 +161,29 @@ export function AdminOverview({ products, orders, users }: AdminOverviewProps) {
                     </div>
                 </Card>
 
-                <Card className="md:col-span-3 border-none shadow-2xl bg-background rounded-[2.5rem] p-6 lg:p-8">
+                <Card className="md:col-span-3 border-none shadow-2xl bg-card dark:bg-zinc-900/50 rounded-[2.5rem] p-6 lg:p-8">
                     <CardHeader className="px-0 pt-0">
-                        <CardTitle className="text-2xl font-black tracking-tighter uppercase mb-2">Top Performers</CardTitle>
+                        <CardTitle className="text-2xl font-black tracking-tighter uppercase mb-2 text-foreground">Top Performers</CardTitle>
                         <p className="text-sm font-medium text-muted-foreground">Maximum engagement assets in current cycle.</p>
                     </CardHeader>
                     <div className="space-y-6 mt-8">
                         {products?.slice(0, 5).map((product, i) => (
                             <div key={i} className="flex items-center gap-4 group cursor-pointer">
-                                <div className="w-12 h-12 rounded-xl overflow-hidden bg-secondary/10 flex-shrink-0">
+                                <div className="w-12 h-12 rounded-xl overflow-hidden bg-secondary/10 dark:bg-white/5 flex-shrink-0">
                                     <img src={product.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="" />
                                 </div>
                                 <div className="flex-1">
-                                    <p className="font-black text-sm tracking-tight">{product.name}</p>
+                                    <p className="font-black text-sm tracking-tight text-foreground">{product.name}</p>
                                     <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{product.category}</p>
                                 </div>
                                 <div className="text-right">
-                                    <p className="font-black text-sm">{formatCurrency(product.price)}</p>
+                                    <p className="font-black text-sm text-foreground">{formatCurrency(product.price)}</p>
                                     <p className="text-[10px] font-bold text-green-500 uppercase tracking-widest">+12%</p>
                                 </div>
                             </div>
                         ))}
                     </div>
-                    <Button variant="outline" className="w-full mt-8 rounded-2xl h-12 border-2 font-black uppercase text-[10px] tracking-widest">
+                    <Button variant="outline" className="w-full mt-8 rounded-2xl h-12 border-2 font-black uppercase text-[10px] tracking-widest hover:bg-secondary/10 dark:border-white/10 dark:text-white">
                         View Analytics Report
                     </Button>
                 </Card>

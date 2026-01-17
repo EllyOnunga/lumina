@@ -315,9 +315,9 @@ export default function AdminDashboard() {
                 {/* Product Management */}
                 {(location === "/admin/products") && (
                     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        <div className="flex justify-between items-center bg-secondary/10 p-8 rounded-[2.5rem]">
+                        <div className="flex justify-between items-center bg-card dark:bg-white/5 p-8 rounded-[2.5rem] border border-border dark:border-white/5">
                             <div>
-                                <h1 className="text-4xl font-black tracking-tighter">Inventory</h1>
+                                <h1 className="text-4xl font-black tracking-tighter text-foreground">Inventory</h1>
                                 <p className="text-muted-foreground font-medium">Manage your storefront and catalog</p>
                             </div>
                             <div className="flex gap-4">
@@ -330,11 +330,11 @@ export default function AdminDashboard() {
                                     aria-label="Import products from CSV"
                                     title="Import CSV"
                                 />
-                                <Button variant="outline" className="rounded-2xl h-14" onClick={() => fileInputRef.current?.click()}>
+                                <Button variant="outline" className="rounded-2xl h-14 border-2 dark:border-white/10 dark:text-white" onClick={() => fileInputRef.current?.click()}>
                                     <Upload className="mr-2 h-5 w-5" />
                                     Import CSV
                                 </Button>
-                                <Button variant="outline" className="rounded-2xl h-14" onClick={exportProducts}>
+                                <Button variant="outline" className="rounded-2xl h-14 border-2 dark:border-white/10 dark:text-white" onClick={exportProducts}>
                                     <Download className="mr-2 h-5 w-5" />
                                     Export CSV
                                 </Button>
@@ -346,8 +346,8 @@ export default function AdminDashboard() {
                                         Launch Product
                                     </Button>
                                 </DialogTrigger>
-                                <DialogContent className="sm:max-w-[500px] rounded-[2rem] border-none shadow-2xl p-0 overflow-hidden">
-                                    <div className="bg-primary/10 p-8">
+                                <DialogContent className="sm:max-w-[500px] rounded-[2rem] border-none shadow-2xl p-0 overflow-hidden bg-background dark:bg-black">
+                                    <div className="bg-primary/20 p-8 border-b border-border dark:border-white/5">
                                         <DialogHeader>
                                             <DialogTitle className="text-3xl font-black tracking-tighter">
                                                 {editingProduct ? "Edit Logistics" : "New Manifest"}
@@ -363,7 +363,7 @@ export default function AdminDashboard() {
                                                     <FormItem>
                                                         <FormLabel className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Product Title</FormLabel>
                                                         <FormControl>
-                                                            <Input placeholder="Essential Collection Item" className="bg-secondary/10 border-none h-14 rounded-xl font-bold" {...field} />
+                                                            <Input placeholder="Essential Collection Item" className="bg-secondary/10 dark:bg-white/5 border-none h-14 rounded-xl font-bold text-foreground" {...field} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
@@ -377,7 +377,7 @@ export default function AdminDashboard() {
                                                         <FormItem>
                                                             <FormLabel className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">SKU / ID</FormLabel>
                                                             <FormControl>
-                                                                <Input placeholder="LUM-001" className="bg-secondary/10 border-none h-14 rounded-xl font-mono font-bold" {...field} value={field.value ?? ""} />
+                                                                <Input placeholder="LUM-001" className="bg-secondary/10 dark:bg-white/5 border-none h-14 rounded-xl font-mono font-bold text-foreground" {...field} value={field.value ?? ""} />
                                                             </FormControl>
                                                             <FormMessage />
                                                         </FormItem>
@@ -414,7 +414,7 @@ export default function AdminDashboard() {
                                                     <FormItem>
                                                         <FormLabel className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Technical Description</FormLabel>
                                                         <FormControl>
-                                                            <Textarea placeholder="Detail the craftsmanship and materials..." className="bg-secondary/10 border-none rounded-xl min-h-[120px] font-medium" {...field} />
+                                                            <Textarea placeholder="Detail the craftsmanship and materials..." className="bg-secondary/10 dark:bg-white/5 border-none rounded-xl min-h-[120px] font-medium text-foreground" {...field} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
@@ -428,7 +428,7 @@ export default function AdminDashboard() {
                                                         <FormItem>
                                                             <FormLabel className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Unit Price (KSH)</FormLabel>
                                                             <FormControl>
-                                                                <Input type="number" className="bg-secondary/10 border-none h-14 rounded-xl font-mono text-lg font-bold" {...field} onChange={e => field.onChange(parseInt(e.target.value))} />
+                                                                <Input type="number" className="bg-secondary/10 dark:bg-white/5 border-none h-14 rounded-xl font-mono text-lg font-bold text-foreground" {...field} onChange={e => field.onChange(parseInt(e.target.value))} />
                                                             </FormControl>
                                                             <FormMessage />
                                                         </FormItem>
@@ -441,7 +441,7 @@ export default function AdminDashboard() {
                                                         <FormItem>
                                                             <FormLabel className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Inventory Level</FormLabel>
                                                             <FormControl>
-                                                                <Input type="number" className="bg-secondary/10 border-none h-14 rounded-xl font-mono text-lg font-bold" {...field} onChange={e => field.onChange(parseInt(e.target.value))} />
+                                                                <Input type="number" className="bg-secondary/10 dark:bg-white/5 border-none h-14 rounded-xl font-mono text-lg font-bold text-foreground" {...field} onChange={e => field.onChange(parseInt(e.target.value))} />
                                                             </FormControl>
                                                             <FormMessage />
                                                         </FormItem>
@@ -455,7 +455,7 @@ export default function AdminDashboard() {
                                                     <FormItem>
                                                         <FormLabel className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Classification</FormLabel>
                                                         <FormControl>
-                                                            <Input placeholder="Accessories" className="bg-secondary/10 border-none h-14 rounded-xl font-bold" {...field} />
+                                                            <Input placeholder="Accessories" className="bg-secondary/10 dark:bg-white/5 border-none h-14 rounded-xl font-bold text-foreground" {...field} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
@@ -468,7 +468,7 @@ export default function AdminDashboard() {
                                                     <FormItem>
                                                         <FormLabel className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Brand / Maker</FormLabel>
                                                         <FormControl>
-                                                            <Input placeholder="Lumina Originals" className="bg-secondary/10 border-none h-14 rounded-xl font-bold" {...field} value={field.value ?? ""} />
+                                                            <Input placeholder="Lumina Originals" className="bg-secondary/10 dark:bg-white/5 border-none h-14 rounded-xl font-bold text-foreground" {...field} value={field.value ?? ""} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
@@ -481,7 +481,7 @@ export default function AdminDashboard() {
                                                     <FormItem>
                                                         <FormLabel className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Main Visual URL</FormLabel>
                                                         <FormControl>
-                                                            <Input className="bg-secondary/10 border-none h-14 rounded-xl font-medium" {...field} />
+                                                            <Input className="bg-secondary/10 dark:bg-white/5 border-none h-14 rounded-xl font-medium text-foreground" {...field} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
@@ -496,7 +496,7 @@ export default function AdminDashboard() {
                                                         <FormControl>
                                                             <Textarea
                                                                 placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
-                                                                className="bg-secondary/10 border-none rounded-xl min-h-[100px] font-medium"
+                                                                className="bg-secondary/10 dark:bg-white/5 border-none rounded-xl min-h-[100px] font-medium text-foreground"
                                                                 value={Array.isArray(field.value) ? field.value.join('\n') : ''}
                                                                 onChange={(e) => field.onChange(e.target.value.split('\n').filter(url => url.trim() !== ''))}
                                                             />
@@ -579,7 +579,7 @@ export default function AdminDashboard() {
                                                                     onClick={() => setSelectedCategories(prev => prev.includes(cat.id) ? prev.filter(id => id !== cat.id) : [...prev, cat.id])}
                                                                     className={cn(
                                                                         "px-4 py-2 rounded-xl text-xs font-bold border-2 transition-all",
-                                                                        selectedCategories.includes(cat.id) ? "bg-primary border-primary text-primary-foreground shadow-lg shadow-primary/20" : "border-secondary/10 hover:border-primary/50"
+                                                                        selectedCategories.includes(cat.id) ? "bg-primary border-primary text-primary-foreground shadow-lg shadow-primary/20" : "border-border dark:border-white/10 hover:border-primary/50 text-foreground"
                                                                     )}
                                                                 >
                                                                     {cat.name}
@@ -588,7 +588,7 @@ export default function AdminDashboard() {
                                                         </div>
                                                     </div>
                                                     <div className="space-y-3">
-                                                        <Label className="text-sm font-bold ml-1">Metadata Tags</Label>
+                                                        <Label className="text-sm font-bold ml-1 text-foreground">Metadata Tags</Label>
                                                         <div className="flex flex-wrap gap-2">
                                                             {tags?.map(tag => (
                                                                 <button
@@ -597,7 +597,7 @@ export default function AdminDashboard() {
                                                                     onClick={() => setSelectedTags(prev => prev.includes(tag.id) ? prev.filter(id => id !== tag.id) : [...prev, tag.id])}
                                                                     className={cn(
                                                                         "px-4 py-2 rounded-xl text-xs font-bold border-2 transition-all",
-                                                                        selectedTags.includes(tag.id) ? "bg-secondary text-secondary-foreground border-secondary shadow-lg" : "border-secondary/10 hover:border-secondary/50"
+                                                                        selectedTags.includes(tag.id) ? "bg-secondary text-secondary-foreground border-secondary shadow-lg" : "border-border dark:border-white/10 hover:border-secondary/50 text-foreground"
                                                                     )}
                                                                 >
                                                                     #{tag.name}
@@ -617,9 +617,9 @@ export default function AdminDashboard() {
                             </Dialog>
                         </div>
 
-                        <div className="bg-background rounded-[2.5rem] border border-secondary/10 overflow-hidden shadow-2xl">
+                        <div className="bg-card dark:bg-black rounded-[2.5rem] border border-border dark:border-white/5 overflow-hidden shadow-2xl">
                             <table className="w-full text-sm">
-                                <thead className="bg-secondary/5 border-b border-secondary/10">
+                                <thead className="bg-secondary/5 dark:bg-white/2 border-b border-border dark:border-white/5">
                                     <tr>
                                         <th className="px-10 py-6 text-left font-black uppercase tracking-[0.2em] text-[10px] text-muted-foreground">Logistics</th>
                                         <th className="px-10 py-6 text-left font-black uppercase tracking-[0.2em] text-[10px] text-muted-foreground">Category</th>
@@ -628,22 +628,22 @@ export default function AdminDashboard() {
                                         <th className="px-10 py-6 text-right font-black uppercase tracking-[0.2em] text-[10px] text-muted-foreground">Operations</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-secondary/10">
+                                <tbody className="divide-y divide-border dark:divide-white/5">
                                     {products?.map((product: Product) => (
-                                        <tr key={product.id} className="hover:bg-secondary/5 transition-all group">
+                                        <tr key={product.id} className="hover:bg-secondary/5 dark:hover:bg-white/2 transition-all group">
                                             <td className="px-10 py-6">
                                                 <div className="flex items-center gap-6">
-                                                    <div className="w-20 h-20 rounded-2xl overflow-hidden bg-secondary/10 flex-shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-500">
+                                                    <div className="w-20 h-20 rounded-2xl overflow-hidden bg-secondary/10 dark:bg-white/5 flex-shrink-0 shadow-lg group-hover:scale-110 transition-transform duration-500">
                                                         <img src={product.image} className="w-full h-full object-cover" alt={product.name} />
                                                     </div>
                                                     <div>
-                                                        <p className="font-black text-lg tracking-tight group-hover:text-primary transition-colors">{product.name}</p>
+                                                        <p className="font-black text-lg tracking-tight group-hover:text-primary transition-colors text-foreground">{product.name}</p>
                                                         <p className="text-muted-foreground text-xs line-clamp-1 max-w-[200px]">{product.description}</p>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="px-10 py-6">
-                                                <span className="px-4 py-2 bg-secondary/10 rounded-full font-bold text-[10px] uppercase tracking-widest">{product.category}</span>
+                                                <span className="px-4 py-2 bg-secondary/10 dark:bg-white/5 rounded-full font-bold text-[10px] uppercase tracking-widest text-foreground">{product.category}</span>
                                             </td>
                                             <td className="px-10 py-6">
                                                 <div className="flex flex-col">
@@ -654,14 +654,14 @@ export default function AdminDashboard() {
                                                 </div>
                                             </td>
                                             <td className="px-10 py-6">
-                                                <span className="font-mono font-black text-lg">{formatCurrency(product.price)}</span>
+                                                <span className="font-mono font-black text-lg text-foreground">{formatCurrency(product.price)}</span>
                                             </td>
                                             <td className="px-10 py-6 text-right">
                                                 <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0">
                                                     <Button
                                                         variant="outline"
                                                         size="icon"
-                                                        className="h-12 w-12 rounded-xl border-2 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
+                                                        className="h-12 w-12 rounded-xl border-2 dark:border-white/10 dark:text-white hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all"
                                                         onClick={async () => {
                                                             setEditingProduct(product);
                                                             form.reset(product as InsertProduct);
@@ -681,7 +681,7 @@ export default function AdminDashboard() {
                                                     <Button
                                                         variant="outline"
                                                         size="icon"
-                                                        className="h-12 w-12 rounded-xl border-2 hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-all"
+                                                        className="h-12 w-12 rounded-xl border-2 dark:border-white/10 dark:text-white hover:bg-destructive hover:text-destructive-foreground hover:border-destructive transition-all"
                                                         onClick={() => {
                                                             if (confirm("Verify permanent de-registration of this asset?")) {
                                                                 deleteProductMutation.mutate(product.id);
@@ -703,51 +703,51 @@ export default function AdminDashboard() {
                 {/* Orders Management */}
                 {location === "/admin/orders" && (
                     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        <div className="flex justify-between items-center bg-secondary/10 p-8 rounded-[2.5rem]">
+                        <div className="flex justify-between items-center bg-card dark:bg-white/5 p-8 rounded-[2.5rem] border border-border dark:border-white/5">
                             <div>
-                                <h1 className="text-4xl font-black tracking-tighter">Order Logistics</h1>
+                                <h1 className="text-4xl font-black tracking-tighter text-foreground">Order Logistics</h1>
                                 <p className="text-muted-foreground font-medium">Global dispatch and fulfillment status</p>
                             </div>
                         </div>
 
                         <div className="grid gap-6">
                             {orders?.map((order) => (
-                                <div key={order.id} className="bg-background border border-secondary/10 rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all p-8 flex flex-col md:flex-row gap-8 items-center border-l-8 border-l-primary/20">
+                                <div key={order.id} className="bg-card dark:bg-black border border-border dark:border-white/5 rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all p-8 flex flex-col md:flex-row gap-8 items-center border-l-8 border-l-primary/20">
                                     <div className="flex-1 space-y-4">
                                         <div className="flex items-center gap-4">
                                             <span className="px-4 py-2 bg-primary/10 text-primary rounded-xl font-black text-sm tracking-tighter">ORD-#{order.id.toString().padStart(5, '0')}</span>
                                             <span className="text-muted-foreground font-bold text-sm tracking-tighter uppercase">{new Date(order.createdAt).toLocaleDateString()}</span>
                                         </div>
                                         <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center font-black text-xs">
+                                            <div className="w-10 h-10 rounded-full bg-secondary/10 dark:bg-white/5 flex items-center justify-center font-black text-xs text-foreground">
                                                 {order.user ? order.user.username[0].toUpperCase() : "G"}
                                             </div>
                                             <div>
-                                                <p className="font-black leading-tight">{order.user ? order.user.username : "Guest Customer"}</p>
+                                                <p className="font-black leading-tight text-foreground">{order.user ? order.user.username : "Guest Customer"}</p>
                                                 <p className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground">{order.user ? "Authorized Client" : "Guest Purchase"}</p>
                                             </div>
                                         </div>
                                         <div className="flex gap-4 flex-wrap">
                                             {order.items.map((item, idx) => (
-                                                <div key={idx} className="flex items-center gap-2 bg-secondary/5 px-3 py-2 rounded-lg border border-secondary/10">
+                                                <div key={idx} className="flex items-center gap-2 bg-secondary/5 dark:bg-white/5 px-3 py-2 rounded-lg border border-border dark:border-white/5">
                                                     <span className="font-black text-xs text-primary">{item.quantity}x</span>
-                                                    <span className="font-bold text-xs truncate max-w-[120px]">{item.product.name}</span>
+                                                    <span className="font-bold text-xs truncate max-w-[120px] text-foreground">{item.product.name}</span>
                                                 </div>
                                             ))}
                                         </div>
                                     </div>
 
                                     <div className="text-right space-y-4 w-full md:w-auto">
-                                        <p className="text-3xl font-black tracking-tighter font-mono">{formatCurrency(order.total)}</p>
+                                        <p className="text-3xl font-black tracking-tighter font-mono text-foreground">{formatCurrency(order.total)}</p>
                                         <div className="flex items-center gap-2 justify-end">
                                             <Select
                                                 defaultValue={order.status}
                                                 onValueChange={(status) => updateOrderStatusMutation.mutate({ id: order.id, status })}
                                             >
-                                                <SelectTrigger className="w-[180px] h-12 rounded-xl border-2 font-black uppercase text-[10px] tracking-widest">
+                                                <SelectTrigger className="w-[180px] h-12 rounded-xl border-2 font-black uppercase text-[10px] tracking-widest dark:border-white/10 dark:text-white">
                                                     <SelectValue />
                                                 </SelectTrigger>
-                                                <SelectContent className="rounded-2xl border-none shadow-2xl">
+                                                <SelectContent className="rounded-2xl border border-border dark:border-white/5 shadow-2xl bg-card dark:bg-zinc-900">
                                                     <SelectItem value="pending" className="font-bold">Pending</SelectItem>
                                                     <SelectItem value="processing" className="font-bold">Processing</SelectItem>
                                                     <SelectItem value="shipped" className="font-bold">Shipped</SelectItem>
@@ -765,16 +765,16 @@ export default function AdminDashboard() {
                 {/* User Security Management */}
                 {location === "/admin/users" && (
                     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                        <div className="flex justify-between items-center bg-secondary/10 p-8 rounded-[2.5rem]">
+                        <div className="flex justify-between items-center bg-card dark:bg-white/5 p-8 rounded-[2.5rem] border border-border dark:border-white/5">
                             <div>
-                                <h1 className="text-4xl font-black tracking-tighter">Security & Permissions</h1>
+                                <h1 className="text-4xl font-black tracking-tighter text-foreground">Security & Permissions</h1>
                                 <p className="text-muted-foreground font-medium">Manage administrative access levels</p>
                             </div>
                         </div>
 
-                        <div className="bg-background rounded-[2.5rem] border border-secondary/10 overflow-hidden shadow-2xl">
+                        <div className="bg-card dark:bg-black rounded-[2.5rem] border border-border dark:border-white/5 overflow-hidden shadow-2xl">
                             <table className="w-full text-sm">
-                                <thead className="bg-secondary/5 border-b border-secondary/10">
+                                <thead className="bg-secondary/5 dark:bg-white/2 border-b border-border dark:border-white/5">
                                     <tr>
                                         <th className="px-10 py-6 text-left font-black uppercase tracking-[0.2em] text-[10px] text-muted-foreground">Principal</th>
                                         <th className="px-10 py-6 text-left font-black uppercase tracking-[0.2em] text-[10px] text-muted-foreground">ID Manifest</th>
@@ -782,28 +782,28 @@ export default function AdminDashboard() {
                                         <th className="px-10 py-6 text-right font-black uppercase tracking-[0.2em] text-[10px] text-muted-foreground">Authorization</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-secondary/10">
+                                <tbody className="divide-y divide-border dark:divide-white/5">
                                     {users?.map((user) => (
-                                        <tr key={user.id} className="hover:bg-secondary/5 transition-colors">
+                                        <tr key={user.id} className="hover:bg-secondary/5 dark:hover:bg-white/2 transition-colors">
                                             <td className="px-10 py-6 text-lg">
                                                 <div className="flex items-center gap-4">
                                                     <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-black shadow-inner">
                                                         {user.username[0].toUpperCase()}
                                                     </div>
-                                                    <span className="font-black tracking-tight">{user.username}</span>
+                                                    <span className="font-black tracking-tight text-foreground">{user.username}</span>
                                                 </div>
                                             </td>
-                                            <td className="px-10 py-6 font-mono text-sm opacity-50 font-bold">SHA-#{user.id.toString().padStart(6, '0')}</td>
+                                            <td className="px-10 py-6 font-mono text-sm opacity-50 font-bold text-foreground">SHA-#{user.id.toString().padStart(6, '0')}</td>
                                             <td className="px-10 py-6">
                                                 <Select
                                                     defaultValue={user.role}
                                                     onValueChange={(role) => updateRoleMutation.mutate({ id: user.id, role })}
                                                     disabled={user.id === currentUser.id}
                                                 >
-                                                    <SelectTrigger className="w-[140px] h-10 rounded-xl border-2 font-black uppercase text-[10px] tracking-widest">
+                                                    <SelectTrigger className="w-[140px] h-10 rounded-xl border-2 font-black uppercase text-[10px] tracking-widest dark:border-white/10 dark:text-white">
                                                         <SelectValue />
                                                     </SelectTrigger>
-                                                    <SelectContent className="rounded-2xl border-none shadow-2xl">
+                                                    <SelectContent className="rounded-2xl border border-border dark:border-white/5 shadow-2xl bg-card dark:bg-zinc-900">
                                                         <SelectItem value="admin" className="font-bold">Admin</SelectItem>
                                                         <SelectItem value="manager" className="font-bold">Manager</SelectItem>
                                                         <SelectItem value="editor" className="font-bold">Editor</SelectItem>

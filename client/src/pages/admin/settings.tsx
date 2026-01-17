@@ -67,9 +67,9 @@ export default function AdminSettings() {
     return (
         <AdminLayout>
             <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                <div className="flex justify-between items-center bg-secondary/10 p-10 rounded-[2.5rem] border border-secondary/5">
+                <div className="flex justify-between items-center bg-secondary/5 dark:bg-white/2 p-10 rounded-[2.5rem] border border-border dark:border-white/5">
                     <div>
-                        <h1 className="text-4xl font-black tracking-tighter mb-2">Platform Settings</h1>
+                        <h1 className="text-4xl font-black tracking-tighter mb-2 text-foreground">Platform Settings</h1>
                         <p className="text-muted-foreground font-medium text-lg">Configure your e-commerce platform</p>
                     </div>
                     <Button
@@ -104,7 +104,7 @@ export default function AdminSettings() {
                                 <TabsTrigger
                                     key={tab.value}
                                     value={tab.value}
-                                    className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-xl px-4 py-3 font-black uppercase text-[10px] tracking-wider transition-all"
+                                    className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-xl px-4 py-3 font-black uppercase text-[10px] tracking-wider transition-all dark:text-muted-foreground dark:data-[state=active]:text-white"
                                 >
                                     <Icon className="w-4 h-4 mr-2" />
                                     {tab.label}
@@ -115,71 +115,71 @@ export default function AdminSettings() {
 
                     {/* Store Settings */}
                     <TabsContent value="store" className="space-y-6">
-                        <div className="bg-white p-8 rounded-[2rem] border border-secondary/10 space-y-6">
-                            <h2 className="text-2xl font-black tracking-tight">Store Information</h2>
+                        <div className="bg-card dark:bg-black p-8 rounded-[2rem] border border-border dark:border-white/10 space-y-6">
+                            <h2 className="text-2xl font-black tracking-tight text-foreground">Store Information</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <Label htmlFor="storeName">Store Name</Label>
+                                    <Label htmlFor="storeName" className="text-foreground">Store Name</Label>
                                     <Input
                                         id="storeName"
                                         value={currentData.store?.storeName || ""}
                                         onChange={(e) => updateField("store", "storeName", e.target.value)}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="storeEmail">Store Email</Label>
+                                    <Label htmlFor="storeEmail" className="text-foreground">Store Email</Label>
                                     <Input
                                         id="storeEmail"
                                         type="email"
                                         value={currentData.store?.storeEmail || ""}
                                         onChange={(e) => updateField("store", "storeEmail", e.target.value)}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="storePhone">Store Phone</Label>
+                                    <Label htmlFor="storePhone" className="text-foreground">Store Phone</Label>
                                     <Input
                                         id="storePhone"
                                         value={currentData.store?.storePhone || ""}
                                         onChange={(e) => updateField("store", "storePhone", e.target.value)}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="storeCountry">Country</Label>
+                                    <Label htmlFor="storeCountry" className="text-foreground">Country</Label>
                                     <Input
                                         id="storeCountry"
                                         value={currentData.store?.storeCountry || ""}
                                         onChange={(e) => updateField("store", "storeCountry", e.target.value)}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2 md:col-span-2">
-                                    <Label htmlFor="storeAddress">Address</Label>
+                                    <Label htmlFor="storeAddress" className="text-foreground">Address</Label>
                                     <Input
                                         id="storeAddress"
                                         value={currentData.store?.storeAddress || ""}
                                         onChange={(e) => updateField("store", "storeAddress", e.target.value)}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="storeCity">City</Label>
+                                    <Label htmlFor="storeCity" className="text-foreground">City</Label>
                                     <Input
                                         id="storeCity"
                                         value={currentData.store?.storeCity || ""}
                                         onChange={(e) => updateField("store", "storeCity", e.target.value)}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label htmlFor="storeZipCode">Zip Code</Label>
+                                    <Label htmlFor="storeZipCode" className="text-foreground">Zip Code</Label>
                                     <Input
                                         id="storeZipCode"
                                         value={currentData.store?.storeZipCode || ""}
                                         onChange={(e) => updateField("store", "storeZipCode", e.target.value)}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                             </div>
@@ -188,13 +188,13 @@ export default function AdminSettings() {
 
                     {/* Payment Settings */}
                     <TabsContent value="payment" className="space-y-6">
-                        <div className="bg-white p-8 rounded-[2rem] border border-secondary/10 space-y-8">
-                            <h2 className="text-2xl font-black tracking-tight">Payment Methods</h2>
+                        <div className="bg-card dark:bg-black p-8 rounded-[2rem] border border-border dark:border-white/10 space-y-8">
+                            <h2 className="text-2xl font-black tracking-tight text-foreground">Payment Methods</h2>
 
                             {/* M-Pesa */}
-                            <div className="space-y-4 p-6 bg-secondary/5 rounded-xl">
+                            <div className="space-y-4 p-6 bg-secondary/5 dark:bg-white/2 rounded-xl">
                                 <div className="flex items-center justify-between">
-                                    <h3 className="text-lg font-black">M-Pesa</h3>
+                                    <h3 className="text-lg font-black text-foreground">M-Pesa</h3>
                                     <Switch
                                         checked={currentData.payment?.mpesaEnabled || false}
                                         onCheckedChange={(checked) => updateField("payment", "mpesaEnabled", checked)}
@@ -203,20 +203,20 @@ export default function AdminSettings() {
                                 {currentData.payment?.mpesaEnabled && (
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div className="space-y-2">
-                                            <Label>Consumer Key</Label>
+                                            <Label className="text-foreground">Consumer Key</Label>
                                             <Input
                                                 value={currentData.payment?.mpesaConsumerKey || ""}
                                                 onChange={(e) => updateField("payment", "mpesaConsumerKey", e.target.value)}
-                                                className="rounded-xl"
+                                                className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                             />
                                         </div>
                                         <div className="space-y-2">
-                                            <Label>Consumer Secret</Label>
+                                            <Label className="text-foreground">Consumer Secret</Label>
                                             <Input
                                                 type="password"
                                                 value={currentData.payment?.mpesaConsumerSecret || ""}
                                                 onChange={(e) => updateField("payment", "mpesaConsumerSecret", e.target.value)}
-                                                className="rounded-xl"
+                                                className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                             />
                                         </div>
                                     </div>
@@ -224,9 +224,9 @@ export default function AdminSettings() {
                             </div>
 
                             {/* Stripe */}
-                            <div className="space-y-4 p-6 bg-secondary/5 rounded-xl">
+                            <div className="space-y-4 p-6 bg-secondary/5 dark:bg-white/2 rounded-xl">
                                 <div className="flex items-center justify-between">
-                                    <h3 className="text-lg font-black">Stripe</h3>
+                                    <h3 className="text-lg font-black text-foreground">Stripe</h3>
                                     <Switch
                                         checked={currentData.payment?.stripeEnabled || false}
                                         onCheckedChange={(checked) => updateField("payment", "stripeEnabled", checked)}
@@ -235,20 +235,20 @@ export default function AdminSettings() {
                                 {currentData.payment?.stripeEnabled && (
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div className="space-y-2">
-                                            <Label>Public Key</Label>
+                                            <Label className="text-foreground">Public Key</Label>
                                             <Input
                                                 value={currentData.payment?.stripePublicKey || ""}
                                                 onChange={(e) => updateField("payment", "stripePublicKey", e.target.value)}
-                                                className="rounded-xl"
+                                                className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                             />
                                         </div>
                                         <div className="space-y-2">
-                                            <Label>Secret Key</Label>
+                                            <Label className="text-foreground">Secret Key</Label>
                                             <Input
                                                 type="password"
                                                 value={currentData.payment?.stripeSecretKey || ""}
                                                 onChange={(e) => updateField("payment", "stripeSecretKey", e.target.value)}
-                                                className="rounded-xl"
+                                                className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                             />
                                         </div>
                                     </div>
@@ -256,9 +256,9 @@ export default function AdminSettings() {
                             </div>
 
                             {/* Cash on Delivery */}
-                            <div className="space-y-4 p-6 bg-secondary/5 rounded-xl">
+                            <div className="space-y-4 p-6 bg-secondary/5 dark:bg-white/2 rounded-xl">
                                 <div className="flex items-center justify-between">
-                                    <h3 className="text-lg font-black">Cash on Delivery</h3>
+                                    <h3 className="text-lg font-black text-foreground">Cash on Delivery</h3>
                                     <Switch
                                         checked={currentData.payment?.codEnabled || false}
                                         onCheckedChange={(checked) => updateField("payment", "codEnabled", checked)}
@@ -270,54 +270,54 @@ export default function AdminSettings() {
 
                     {/* Shipping Settings */}
                     <TabsContent value="shipping" className="space-y-6">
-                        <div className="bg-white p-8 rounded-[2rem] border border-secondary/10 space-y-6">
-                            <h2 className="text-2xl font-black tracking-tight">Shipping Configuration</h2>
+                        <div className="bg-card dark:bg-black p-8 rounded-[2rem] border border-border dark:border-white/10 space-y-6">
+                            <h2 className="text-2xl font-black tracking-tight text-foreground">Shipping Configuration</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <Label>Free Shipping Threshold (cents)</Label>
+                                    <Label className="text-foreground">Free Shipping Threshold (cents)</Label>
                                     <Input
                                         type="number"
                                         value={currentData.shipping?.freeShippingThreshold || 0}
                                         onChange={(e) => updateField("shipping", "freeShippingThreshold", parseInt(e.target.value))}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Standard Shipping Cost (cents)</Label>
+                                    <Label className="text-foreground">Standard Shipping Cost (cents)</Label>
                                     <Input
                                         type="number"
                                         value={currentData.shipping?.standardShippingCost || 0}
                                         onChange={(e) => updateField("shipping", "standardShippingCost", parseInt(e.target.value))}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Express Shipping Cost (cents)</Label>
+                                    <Label className="text-foreground">Express Shipping Cost (cents)</Label>
                                     <Input
                                         type="number"
                                         value={currentData.shipping?.expressShippingCost || 0}
                                         onChange={(e) => updateField("shipping", "expressShippingCost", parseInt(e.target.value))}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Standard Delivery Time</Label>
+                                    <Label className="text-foreground">Standard Delivery Time</Label>
                                     <Input
                                         value={currentData.shipping?.standardShippingDays || ""}
                                         onChange={(e) => updateField("shipping", "standardShippingDays", e.target.value)}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Express Delivery Time</Label>
+                                    <Label className="text-foreground">Express Delivery Time</Label>
                                     <Input
                                         value={currentData.shipping?.expressShippingDays || ""}
                                         onChange={(e) => updateField("shipping", "expressShippingDays", e.target.value)}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
-                                <div className="space-y-2 flex items-center justify-between p-4 bg-secondary/5 rounded-xl">
-                                    <Label>Allow Pickup</Label>
+                                <div className="space-y-2 flex items-center justify-between p-4 bg-secondary/5 dark:bg-white/5 border border-border dark:border-white/5 rounded-xl">
+                                    <Label className="text-foreground">Allow Pickup</Label>
                                     <Switch
                                         checked={currentData.shipping?.allowPickup || false}
                                         onCheckedChange={(checked) => updateField("shipping", "allowPickup", checked)}
@@ -329,35 +329,35 @@ export default function AdminSettings() {
 
                     {/* Tax Settings */}
                     <TabsContent value="tax" className="space-y-6">
-                        <div className="bg-white p-8 rounded-[2rem] border border-secondary/10 space-y-6">
-                            <h2 className="text-2xl font-black tracking-tight">Tax Configuration</h2>
+                        <div className="bg-card dark:bg-black p-8 rounded-[2rem] border border-border dark:border-white/10 space-y-6">
+                            <h2 className="text-2xl font-black tracking-tight text-foreground">Tax Configuration</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2 flex items-center justify-between p-4 bg-secondary/5 rounded-xl">
-                                    <Label>Enable Tax</Label>
+                                <div className="space-y-2 flex items-center justify-between p-4 bg-secondary/5 dark:bg-white/5 border border-border dark:border-white/5 rounded-xl">
+                                    <Label className="text-foreground">Enable Tax</Label>
                                     <Switch
                                         checked={currentData.tax?.taxEnabled || false}
                                         onCheckedChange={(checked) => updateField("tax", "taxEnabled", checked)}
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Tax Rate (%)</Label>
+                                    <Label className="text-foreground">Tax Rate (%)</Label>
                                     <Input
                                         type="number"
                                         value={currentData.tax?.taxRate || 0}
                                         onChange={(e) => updateField("tax", "taxRate", parseFloat(e.target.value))}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Tax Name</Label>
+                                    <Label className="text-foreground">Tax Name</Label>
                                     <Input
                                         value={currentData.tax?.taxName || ""}
                                         onChange={(e) => updateField("tax", "taxName", e.target.value)}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
-                                <div className="space-y-2 flex items-center justify-between p-4 bg-secondary/5 rounded-xl">
-                                    <Label>Prices Include Tax</Label>
+                                <div className="space-y-2 flex items-center justify-between p-4 bg-secondary/5 dark:bg-white/5 border border-border dark:border-white/5 rounded-xl">
+                                    <Label className="text-foreground">Prices Include Tax</Label>
                                     <Switch
                                         checked={currentData.tax?.pricesIncludeTax || false}
                                         onCheckedChange={(checked) => updateField("tax", "pricesIncludeTax", checked)}
@@ -369,63 +369,63 @@ export default function AdminSettings() {
 
                     {/* Email Settings */}
                     <TabsContent value="email" className="space-y-6">
-                        <div className="bg-white p-8 rounded-[2rem] border border-secondary/10 space-y-6">
-                            <h2 className="text-2xl font-black tracking-tight">Email Configuration</h2>
+                        <div className="bg-card dark:bg-black p-8 rounded-[2rem] border border-border dark:border-white/10 space-y-6">
+                            <h2 className="text-2xl font-black tracking-tight text-foreground">Email Configuration</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <Label>SMTP Host</Label>
+                                    <Label className="text-foreground">SMTP Host</Label>
                                     <Input
                                         value={currentData.email?.smtpHost || ""}
                                         onChange={(e) => updateField("email", "smtpHost", e.target.value)}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>SMTP Port</Label>
+                                    <Label className="text-foreground">SMTP Port</Label>
                                     <Input
                                         type="number"
                                         value={currentData.email?.smtpPort || ""}
                                         onChange={(e) => updateField("email", "smtpPort", parseInt(e.target.value))}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>SMTP User</Label>
+                                    <Label className="text-foreground">SMTP User</Label>
                                     <Input
                                         value={currentData.email?.smtpUser || ""}
                                         onChange={(e) => updateField("email", "smtpUser", e.target.value)}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>SMTP Password</Label>
+                                    <Label className="text-foreground">SMTP Password</Label>
                                     <Input
                                         type="password"
                                         value={currentData.email?.smtpPassword || ""}
                                         onChange={(e) => updateField("email", "smtpPassword", e.target.value)}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>From Email</Label>
+                                    <Label className="text-foreground">From Email</Label>
                                     <Input
                                         type="email"
                                         value={currentData.email?.emailFrom || ""}
                                         onChange={(e) => updateField("email", "emailFrom", e.target.value)}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>From Name</Label>
+                                    <Label className="text-foreground">From Name</Label>
                                     <Input
                                         value={currentData.email?.emailFromName || ""}
                                         onChange={(e) => updateField("email", "emailFromName", e.target.value)}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                             </div>
-                            <div className="space-y-4 p-6 bg-secondary/5 rounded-xl">
-                                <h3 className="text-lg font-black">Email Notifications</h3>
+                            <div className="space-y-4 p-6 bg-secondary/5 dark:bg-white/2 border border-border dark:border-white/5 rounded-xl">
+                                <h3 className="text-lg font-black text-foreground">Email Notifications</h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     {[
                                         { key: "orderConfirmationEnabled", label: "Order Confirmation" },
@@ -433,8 +433,8 @@ export default function AdminSettings() {
                                         { key: "orderDeliveredEnabled", label: "Order Delivered" },
                                         { key: "newsletterEnabled", label: "Newsletter" },
                                     ].map((item) => (
-                                        <div key={item.key} className="flex items-center justify-between p-4 bg-white rounded-xl">
-                                            <Label>{item.label}</Label>
+                                        <div key={item.key} className="flex items-center justify-between p-4 bg-background dark:bg-black border border-border dark:border-white/5 rounded-xl">
+                                            <Label className="text-foreground">{item.label}</Label>
                                             <Switch
                                                 checked={currentData.email?.[item.key as keyof typeof currentData.email] as boolean || false}
                                                 onCheckedChange={(checked) => updateField("email", item.key, checked)}
@@ -448,39 +448,39 @@ export default function AdminSettings() {
 
                     {/* SEO Settings */}
                     <TabsContent value="seo" className="space-y-6">
-                        <div className="bg-white p-8 rounded-[2rem] border border-secondary/10 space-y-6">
-                            <h2 className="text-2xl font-black tracking-tight">SEO Configuration</h2>
+                        <div className="bg-card dark:bg-black p-8 rounded-[2rem] border border-border dark:border-white/10 space-y-6">
+                            <h2 className="text-2xl font-black tracking-tight text-foreground">SEO Configuration</h2>
                             <div className="grid grid-cols-1 gap-6">
                                 <div className="space-y-2">
-                                    <Label>Site Title</Label>
+                                    <Label className="text-foreground">Site Title</Label>
                                     <Input
                                         value={currentData.seo?.siteTitle || ""}
                                         onChange={(e) => updateField("seo", "siteTitle", e.target.value)}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Site Description</Label>
+                                    <Label className="text-foreground">Site Description</Label>
                                     <Input
                                         value={currentData.seo?.siteDescription || ""}
                                         onChange={(e) => updateField("seo", "siteDescription", e.target.value)}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Keywords</Label>
+                                    <Label className="text-foreground">Keywords</Label>
                                     <Input
                                         value={currentData.seo?.siteKeywords || ""}
                                         onChange={(e) => updateField("seo", "siteKeywords", e.target.value)}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Google Analytics ID</Label>
+                                    <Label className="text-foreground">Google Analytics ID</Label>
                                     <Input
                                         value={currentData.seo?.googleAnalyticsId || ""}
                                         onChange={(e) => updateField("seo", "googleAnalyticsId", e.target.value)}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                             </div>
@@ -489,43 +489,43 @@ export default function AdminSettings() {
 
                     {/* Security Settings */}
                     <TabsContent value="security" className="space-y-6">
-                        <div className="bg-white p-8 rounded-[2rem] border border-secondary/10 space-y-6">
-                            <h2 className="text-2xl font-black tracking-tight">Security Configuration</h2>
+                        <div className="bg-card dark:bg-black p-8 rounded-[2rem] border border-border dark:border-white/10 space-y-6">
+                            <h2 className="text-2xl font-black tracking-tight text-foreground">Security Configuration</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2 flex items-center justify-between p-4 bg-secondary/5 rounded-xl">
-                                    <Label>Enable Rate Limiting</Label>
+                                <div className="space-y-2 flex items-center justify-between p-4 bg-secondary/5 dark:bg-white/5 border border-border dark:border-white/5 rounded-xl">
+                                    <Label className="text-foreground">Enable Rate Limiting</Label>
                                     <Switch
                                         checked={currentData.security?.enableRateLimiting || false}
                                         onCheckedChange={(checked) => updateField("security", "enableRateLimiting", checked)}
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Max Login Attempts</Label>
+                                    <Label className="text-foreground">Max Login Attempts</Label>
                                     <Input
                                         type="number"
                                         value={currentData.security?.maxLoginAttempts || 5}
                                         onChange={(e) => updateField("security", "maxLoginAttempts", parseInt(e.target.value))}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Session Timeout (minutes)</Label>
+                                    <Label className="text-foreground">Session Timeout (minutes)</Label>
                                     <Input
                                         type="number"
                                         value={currentData.security?.sessionTimeout || 30}
                                         onChange={(e) => updateField("security", "sessionTimeout", parseInt(e.target.value))}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
-                                <div className="space-y-2 flex items-center justify-between p-4 bg-secondary/5 rounded-xl">
-                                    <Label>Require Email Verification</Label>
+                                <div className="space-y-2 flex items-center justify-between p-4 bg-secondary/5 dark:bg-white/5 border border-border dark:border-white/5 rounded-xl">
+                                    <Label className="text-foreground">Require Email Verification</Label>
                                     <Switch
                                         checked={currentData.security?.requireEmailVerification || false}
                                         onCheckedChange={(checked) => updateField("security", "requireEmailVerification", checked)}
                                     />
                                 </div>
-                                <div className="space-y-2 flex items-center justify-between p-4 bg-secondary/5 rounded-xl">
-                                    <Label>Allow Guest Checkout</Label>
+                                <div className="space-y-2 flex items-center justify-between p-4 bg-secondary/5 dark:bg-white/5 border border-border dark:border-white/5 rounded-xl">
+                                    <Label className="text-foreground">Allow Guest Checkout</Label>
                                     <Switch
                                         checked={currentData.security?.allowGuestCheckout || false}
                                         onCheckedChange={(checked) => updateField("security", "allowGuestCheckout", checked)}
@@ -537,41 +537,41 @@ export default function AdminSettings() {
 
                     {/* Loyalty Settings */}
                     <TabsContent value="loyalty" className="space-y-6">
-                        <div className="bg-white p-8 rounded-[2rem] border border-secondary/10 space-y-6">
-                            <h2 className="text-2xl font-black tracking-tight">Loyalty Program</h2>
+                        <div className="bg-card dark:bg-black p-8 rounded-[2rem] border border-border dark:border-white/10 space-y-6">
+                            <h2 className="text-2xl font-black tracking-tight text-foreground">Loyalty Program</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2 flex items-center justify-between p-4 bg-secondary/5 rounded-xl">
-                                    <Label>Enable Loyalty Program</Label>
+                                <div className="space-y-2 flex items-center justify-between p-4 bg-secondary/5 dark:bg-white/5 border border-border dark:border-white/5 rounded-xl">
+                                    <Label className="text-foreground">Enable Loyalty Program</Label>
                                     <Switch
                                         checked={currentData.loyalty?.loyaltyEnabled || false}
                                         onCheckedChange={(checked) => updateField("loyalty", "loyaltyEnabled", checked)}
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Points Per Currency Unit</Label>
+                                    <Label className="text-foreground">Points Per Currency Unit</Label>
                                     <Input
                                         type="number"
                                         value={currentData.loyalty?.pointsPerCurrency || 1}
                                         onChange={(e) => updateField("loyalty", "pointsPerCurrency", parseInt(e.target.value))}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Points Value (cents)</Label>
+                                    <Label className="text-foreground">Points Value (cents)</Label>
                                     <Input
                                         type="number"
                                         value={currentData.loyalty?.pointsValue || 1}
                                         onChange={(e) => updateField("loyalty", "pointsValue", parseInt(e.target.value))}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Minimum Redemption Points</Label>
+                                    <Label className="text-foreground">Minimum Redemption Points</Label>
                                     <Input
                                         type="number"
                                         value={currentData.loyalty?.minimumRedemption || 100}
                                         onChange={(e) => updateField("loyalty", "minimumRedemption", parseInt(e.target.value))}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
                             </div>
@@ -580,34 +580,34 @@ export default function AdminSettings() {
 
                     {/* Inventory Settings */}
                     <TabsContent value="inventory" className="space-y-6">
-                        <div className="bg-white p-8 rounded-[2rem] border border-secondary/10 space-y-6">
-                            <h2 className="text-2xl font-black tracking-tight">Inventory Management</h2>
+                        <div className="bg-card dark:bg-black p-8 rounded-[2rem] border border-border dark:border-white/10 space-y-6">
+                            <h2 className="text-2xl font-black tracking-tight text-foreground">Inventory Management</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2 flex items-center justify-between p-4 bg-secondary/5 rounded-xl">
-                                    <Label>Track Inventory</Label>
+                                <div className="space-y-2 flex items-center justify-between p-4 bg-secondary/5 dark:bg-white/5 border border-border dark:border-white/5 rounded-xl">
+                                    <Label className="text-foreground">Track Inventory</Label>
                                     <Switch
                                         checked={currentData.inventory?.trackInventory || false}
                                         onCheckedChange={(checked) => updateField("inventory", "trackInventory", checked)}
                                     />
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Low Stock Threshold</Label>
+                                    <Label className="text-foreground">Low Stock Threshold</Label>
                                     <Input
                                         type="number"
                                         value={currentData.inventory?.lowStockThreshold || 5}
                                         onChange={(e) => updateField("inventory", "lowStockThreshold", parseInt(e.target.value))}
-                                        className="rounded-xl"
+                                        className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                     />
                                 </div>
-                                <div className="space-y-2 flex items-center justify-between p-4 bg-secondary/5 rounded-xl">
-                                    <Label>Allow Backorders</Label>
+                                <div className="space-y-2 flex items-center justify-between p-4 bg-secondary/5 dark:bg-white/5 border border-border dark:border-white/5 rounded-xl">
+                                    <Label className="text-foreground">Allow Backorders</Label>
                                     <Switch
                                         checked={currentData.inventory?.allowBackorders || false}
                                         onCheckedChange={(checked) => updateField("inventory", "allowBackorders", checked)}
                                     />
                                 </div>
-                                <div className="space-y-2 flex items-center justify-between p-4 bg-secondary/5 rounded-xl">
-                                    <Label>Notify Low Stock</Label>
+                                <div className="space-y-2 flex items-center justify-between p-4 bg-secondary/5 dark:bg-white/5 border border-border dark:border-white/5 rounded-xl">
+                                    <Label className="text-foreground">Notify Low Stock</Label>
                                     <Switch
                                         checked={currentData.inventory?.notifyLowStock || false}
                                         onCheckedChange={(checked) => updateField("inventory", "notifyLowStock", checked)}
@@ -615,12 +615,12 @@ export default function AdminSettings() {
                                 </div>
                                 {currentData.inventory?.notifyLowStock && (
                                     <div className="space-y-2 md:col-span-2">
-                                        <Label>Low Stock Email</Label>
+                                        <Label className="text-foreground">Low Stock Email</Label>
                                         <Input
                                             type="email"
                                             value={currentData.inventory?.lowStockEmail || ""}
                                             onChange={(e) => updateField("inventory", "lowStockEmail", e.target.value)}
-                                            className="rounded-xl"
+                                            className="rounded-xl bg-background dark:bg-black border-border dark:border-white/10 text-foreground"
                                         />
                                     </div>
                                 )}

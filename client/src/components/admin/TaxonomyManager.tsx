@@ -53,14 +53,14 @@ export function TaxonomyManager() {
             <div key={cat.id} className="space-y-2">
                 <div
                     className={cn(
-                        "flex items-center justify-between p-4 bg-background border border-secondary/10 rounded-2xl group transition-all hover:border-primary/50",
+                        "flex items-center justify-between p-4 bg-card dark:bg-zinc-900 border border-border dark:border-white/5 rounded-2xl group transition-all hover:border-primary/50",
                         depth > 0 && "ml-8 border-l-4 border-l-primary/20"
                     )}
                 >
                     <div className="flex items-center gap-3">
                         <FolderTree className={cn("w-4 h-4", depth === 0 ? "text-primary" : "text-muted-foreground")} />
                         <div>
-                            <p className="font-black tracking-tight">{cat.name}</p>
+                            <p className="font-black tracking-tight text-foreground">{cat.name}</p>
                             <p className="text-[10px] font-mono text-muted-foreground">/{cat.slug}</p>
                         </div>
                     </div>
@@ -84,7 +84,7 @@ export function TaxonomyManager() {
             <div className="space-y-8">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h2 className="text-3xl font-black tracking-tighter flex items-center gap-3">
+                        <h2 className="text-3xl font-black tracking-tighter flex items-center gap-3 text-foreground">
                             <FolderTree className="text-primary" />
                             Hierarchical Taxonomy
                         </h2>
@@ -92,13 +92,13 @@ export function TaxonomyManager() {
                     </div>
                 </div>
 
-                <Card className="rounded-[2rem] border-none shadow-xl bg-secondary/5 p-8 space-y-6">
+                <Card className="rounded-[2rem] border-none shadow-xl bg-card dark:bg-white/5 p-8 space-y-6">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                             <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-2">Category Name</Label>
                             <Input
                                 placeholder="E.g. Outerwear"
-                                className="h-12 rounded-xl border-none bg-background font-bold"
+                                className="h-12 rounded-xl border-none bg-background dark:bg-black font-bold text-foreground"
                                 value={newCategory.name}
                                 onChange={e => setNewCategory(prev => ({ ...prev, name: e.target.value, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') }))}
                             />
@@ -107,7 +107,7 @@ export function TaxonomyManager() {
                             <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-2">URL Slug</Label>
                             <Input
                                 placeholder="outerwear"
-                                className="h-12 rounded-xl border-none bg-background font-mono text-xs"
+                                className="h-12 rounded-xl border-none bg-background dark:bg-black font-mono text-xs text-foreground"
                                 value={newCategory.slug}
                                 onChange={e => setNewCategory(prev => ({ ...prev, slug: e.target.value }))}
                             />
@@ -136,20 +136,20 @@ export function TaxonomyManager() {
             {/* Tags Section */}
             <div className="space-y-8">
                 <div>
-                    <h2 className="text-3xl font-black tracking-tighter flex items-center gap-3">
+                    <h2 className="text-3xl font-black tracking-tighter flex items-center gap-3 text-foreground">
                         <TagsIcon className="text-primary" />
                         Flexible Tagging
                     </h2>
                     <p className="text-muted-foreground font-medium">Flat metadata for dynamic discovery</p>
                 </div>
 
-                <Card className="rounded-[2rem] border-none shadow-xl bg-secondary/5 p-8 space-y-6">
+                <Card className="rounded-[2rem] border-none shadow-xl bg-card dark:bg-white/5 p-8 space-y-6">
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
                             <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-2">Tag Name</Label>
                             <Input
                                 placeholder="E.g. Eco-Friendly"
-                                className="h-12 rounded-xl border-none bg-background font-bold"
+                                className="h-12 rounded-xl border-none bg-background dark:bg-black font-bold text-foreground"
                                 value={newTag.name}
                                 onChange={e => setNewTag(prev => ({ ...prev, name: e.target.value, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') }))}
                             />
@@ -158,7 +158,7 @@ export function TaxonomyManager() {
                             <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-2">URL Slug</Label>
                             <Input
                                 placeholder="eco-friendly"
-                                className="h-12 rounded-xl border-none bg-background font-mono text-xs"
+                                className="h-12 rounded-xl border-none bg-background dark:bg-black font-mono text-xs text-foreground"
                                 value={newTag.slug}
                                 onChange={e => setNewTag(prev => ({ ...prev, slug: e.target.value }))}
                             />
@@ -175,9 +175,9 @@ export function TaxonomyManager() {
 
                 <div className="flex flex-wrap gap-3">
                     {tags?.map(tag => (
-                        <div key={tag.id} className="group relative bg-background border border-secondary/10 px-4 py-3 rounded-2xl flex items-center gap-2 hover:border-primary/50 transition-all">
+                        <div key={tag.id} className="group relative bg-card dark:bg-black border border-border dark:border-white/10 px-4 py-3 rounded-2xl flex items-center gap-2 hover:border-primary/50 transition-all">
                             <Hash className="w-3 h-3 text-muted-foreground" />
-                            <span className="font-bold tracking-tight">{tag.name}</span>
+                            <span className="font-bold tracking-tight text-foreground">{tag.name}</span>
                             <button className="opacity-0 group-hover:opacity-100 transition-opacity ml-2 text-destructive" aria-label="Delete tag" title="Delete tag">
                                 <Trash2 className="w-3 h-3" />
                             </button>
